@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { motion } from "motion/react";
 import { Sun, Moon } from "lucide-react";
 
@@ -116,41 +116,6 @@ interface ThemeToggleProps {
 }
 
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({ darkMode, setDarkMode }) => {
-  // Detect system color scheme preference on initial load and keep in sync unless manually toggled
-  useEffect(() => {
-    try {
-      if (typeof window === "undefined" || !window.matchMedia) return;
-
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      const manualPreference = localStorage.getItem("dz_theme_manual");
-
-      // If user hasn't explicitly set a manual preference, detect and apply system preference
-      if (!manualPreference) {
-        setDarkMode(mediaQuery.matches);
-      }
-
-      // Automatically respond to changes in system color scheme preference
-      const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-        if (!localStorage.getItem("dz_theme_manual")) {
-          setDarkMode(e.matches);
-        }
-      };
-
-      if (mediaQuery.addEventListener) {
-        mediaQuery.addEventListener("change", handleSystemThemeChange);
-        return () => mediaQuery.removeEventListener("change", handleSystemThemeChange);
-      } else if ("addListener" in mediaQuery) {
-        // Fallback for legacy matchMedia implementations
-        // @ts-ignore
-        mediaQuery.addListener(handleSystemThemeChange);
-        // @ts-ignore
-        return () => mediaQuery.removeListener(handleSystemThemeChange);
-      }
-    } catch (err) {
-      console.warn("Could not detect prefers-color-scheme:", err);
-    }
-  }, [setDarkMode]);
-
   const toggleTheme = () => {
     const nextMode = !darkMode;
     try {

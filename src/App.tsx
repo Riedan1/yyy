@@ -1642,17 +1642,15 @@ export default function App() {
   const [sandboxAmount, setSandboxAmount] = useState<number>(500);
   const [sandboxSourceCurrency, setSandboxSourceCurrency] = useState<string>("EUR");
 
-  // --- Dark Mode Theme State ---
+  // --- Dark Mode Theme State (Standard Default: Light Mode) ---
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     try {
-      const hasManual = localStorage.getItem("dz_theme_manual");
-      if (hasManual === "true") {
-        return localStorage.getItem("dz_dark_mode") === "true";
+      const savedTheme = localStorage.getItem("dz_dark_mode");
+      if (savedTheme !== null) {
+        return savedTheme === "true";
       }
-      if (typeof window !== "undefined" && window.matchMedia) {
-        return window.matchMedia("(prefers-color-scheme: dark)").matches;
-      }
-      return localStorage.getItem("dz_dark_mode") === "true";
+      // Standard default is always light mode
+      return false;
     } catch {
       return false;
     }
