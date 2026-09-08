@@ -10650,25 +10650,36 @@ export default function App() {
         <footer className="bg-slate-900 text-slate-400 py-8 px-4 border-t border-slate-800 text-xs text-left shrink-0">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="md:col-span-2">
-              <h4 className="text-white font-bold font-display tracking-tight text-sm">
-                Yume Global Commerce Map
+              <h4 className="text-white font-semibold text-sm tracking-tight">
+                About Yume
               </h4>
-              <p className="text-[11px] text-slate-400 mt-2 max-w-sm leading-relaxed">
-                The leading decentralized hyper-local e-commerce directory. Empowers independent boutique owners to build dynamic online storefronts, configure local delivery zones, and expand visual visibility with integrated search maps.
+              <p className="text-xs text-slate-400 mt-2 max-w-sm leading-relaxed">
+                A discovery platform connecting shoppers with verified local boutiques and independent merchants. Explore regional storefronts, discover authentic collections, and support local businesses.
               </p>
             </div>
             <div>
-              <h5 className="font-bold text-white text-[11px] uppercase block tracking-wider mb-2 font-mono">Key Regions</h5>
-              <ul className="flex flex-col gap-1 text-[11px]">
+              <h5 className="font-semibold text-white text-xs uppercase tracking-wider mb-2.5">Key Regions</h5>
+              <ul className="flex flex-col gap-1.5 text-xs text-slate-400">
                 {getCommunicativeHubs(currentCountry).slice(0, 4).map((hub) => (
-                  <li key={hub.code}>{hub.name} (Hub Center)</li>
+                  <li key={hub.code}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleWilayaTeleport(hub as any);
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                      className="hover:text-amber-400 transition-colors cursor-pointer text-left"
+                    >
+                      {hub.name}
+                    </button>
+                  </li>
                 ))}
               </ul>
             </div>
             <div>
-              <h5 className="font-bold text-white text-[11px] uppercase block tracking-wider mb-2 font-mono">Help & Currencies</h5>
-              <p className="text-[11px] leading-relaxed">
-                All transactions are settled in the merchant's base local currency. Deliveries are operated in partnership with reliable international and local express couriers.
+              <h5 className="font-semibold text-white text-xs uppercase tracking-wider mb-2.5">Payments & Delivery</h5>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Orders are processed securely in local currencies. Shipments are handled by trusted local and international couriers with end-to-end tracking.
               </p>
             </div>
           </div>
