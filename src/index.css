@@ -1,0 +1,192 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Hide main page browser scrollbar while keeping scroll functionality */
+html, body {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* ==========================================
+   GLOBAL DIRECTIONAL (RTL/LTR) & TYPOGRAPHY
+   ========================================== */
+
+/* LTR Alignment (Default / English / French) */
+html[dir="ltr"],
+body[dir="ltr"],
+[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+/* RTL Alignment & Layout Adjustments (Arabic) */
+html[dir="rtl"],
+body[dir="rtl"],
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Form controls in RTL */
+[dir="rtl"] input:not([type="checkbox"]):not([type="radio"]),
+[dir="rtl"] textarea,
+[dir="rtl"] select {
+  text-align: right;
+  direction: rtl;
+}
+
+[dir="ltr"] input:not([type="checkbox"]):not([type="radio"]),
+[dir="ltr"] textarea,
+[dir="ltr"] select {
+  text-align: left;
+  direction: ltr;
+}
+
+/* Bidirectional flex/grid & alignment helper utilities */
+[dir="rtl"] .rtl\:text-right {
+  text-align: right;
+}
+
+[dir="rtl"] .rtl\:text-left {
+  text-align: left;
+}
+
+[dir="rtl"] .rtl\:flex-row-reverse {
+  flex-direction: row-reverse;
+}
+
+/* Global Sentence Case Rule for UI Navigation & Section Headers */
+header nav,
+header h1, header h2, header h3, header h4, header h5, header h6,
+nav,
+.nav-item,
+section h1, section h2, section h3, section h4, section h5, section h6,
+.sentence-case {
+  text-transform: none;
+}
+
+/* Sentence case styling utility */
+.sentence-case::first-letter {
+  text-transform: uppercase;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar,
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar,
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.28);
+    border-radius: 9999px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 116, 139, 0.5);
+  }
+
+  .skinny-faded-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.28) transparent;
+  }
+  .skinny-faded-scrollbar::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+  }
+  .skinny-faded-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .skinny-faded-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(148, 163, 184, 0.28);
+    border-radius: 9999px;
+  }
+  .skinny-faded-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(100, 116, 139, 0.5);
+  }
+}
+
+#merchant-mode-workspace,
+#merchant-profile-modal-backdrop {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.28) transparent;
+}
+#product-preview-modal-root {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+#product-preview-modal-root::-webkit-scrollbar {
+  display: none;
+}
+#merchant-mode-workspace::-webkit-scrollbar,
+#merchant-profile-modal-backdrop::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+#merchant-mode-workspace::-webkit-scrollbar-track,
+#merchant-profile-modal-backdrop::-webkit-scrollbar-track {
+  background: transparent;
+}
+#merchant-mode-workspace::-webkit-scrollbar-thumb,
+#merchant-profile-modal-backdrop::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.28);
+  border-radius: 9999px;
+}
+#merchant-mode-workspace::-webkit-scrollbar-thumb:hover,
+#merchant-profile-modal-backdrop::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 116, 139, 0.5);
+}
+
+@keyframes cardGlowShadow {
+  0% {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08), 0 0 0 0 rgba(217, 119, 6, 0);
+  }
+  50% {
+    box-shadow: 0 18px 36px -6px rgba(0, 0, 0, 0.18), 0 0 22px 3px rgba(217, 119, 6, 0.22);
+  }
+  100% {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08), 0 0 0 0 rgba(217, 119, 6, 0);
+  }
+}
+
+.animated-card-shadow-hover {
+  transition: box-shadow 0.4s ease-in-out, transform 0.4s ease-in-out, border-color 0.3s ease;
+}
+
+.animated-card-shadow-hover:hover,
+.group\/card:hover .animated-card-shadow-hover {
+  animation: cardGlowShadow 2.8s infinite ease-in-out;
+}
+
+

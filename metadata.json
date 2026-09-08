@@ -1,0 +1,9 @@
+{
+  "name": "Algerian Commerce Map",
+  "description": "A proximity-first hybrid marketplace for Algerian merchants, combining visual map-led product discovery with AI-powered copywriting and storefront management.",
+  "requestFramePermissions": [
+    "geolocation",
+    "camera"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,101 @@
+{
+  "entities": {
+    "Wishlist": {
+      "title": "User Saved Collection (Wishlist)",
+      "description": "Represents the items favorited and saved by a user",
+      "type": "object",
+      "properties": {
+        "productIds": {
+          "type": "array",
+          "description": "List of saved product IDs or names"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The ISO timestamp when the saved collection was last updated"
+        }
+      },
+      "required": ["productIds", "updatedAt"]
+    },
+    "MainCategory": {
+      "title": "Main Category",
+      "description": "Represents a high-level catalog category like Fashion, Health and Beauty, or Electronics",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "names": { "type": "object", "description": "Multi-lingual names dictionary e.g. {en, ar, fr}" },
+        "icon": { "type": "string" },
+        "image": { "type": "string" },
+        "order": { "type": "integer" },
+        "isArchived": { "type": "boolean" }
+      },
+      "required": ["id", "names", "icon", "image", "order"]
+    },
+    "Subcategory": {
+      "title": "Subcategory",
+      "description": "Represents a specific category belonging to a main category, which contains dynamic specification fields and sizing rules",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "mainCategoryId": { "type": "string" },
+        "names": { "type": "object", "description": "Multi-lingual names dictionary e.g. {en, ar, fr}" },
+        "icon": { "type": "string" },
+        "image": { "type": "string" },
+        "order": { "type": "integer" },
+        "isArchived": { "type": "boolean" },
+        "sizeSystem": { "type": "object" },
+        "recommendedMaterials": { "type": "array" },
+        "fields": { "type": "array" }
+      },
+      "required": ["id", "mainCategoryId", "names", "icon", "image", "order", "sizeSystem", "recommendedMaterials", "fields"]
+    },
+    "Brand": {
+      "title": "Brand",
+      "description": "Represents a brand under a high-level category with approved models",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "models": { "type": "array" }
+      },
+      "required": ["id", "name", "category", "models"]
+    },
+    "PendingModel": {
+      "title": "Pending Model",
+      "description": "Represents a model submitted by user for review and approval",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "brandId": { "type": "string" },
+        "brandName": { "type": "string" },
+        "modelName": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "submittedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "brandId", "brandName", "modelName", "status", "submittedAt"]
+    }
+  },
+  "firestore": {
+    "/wishlists/{userId}": {
+      "schema": "Wishlist",
+      "description": "Saves and persists user's saved wishlist collection"
+    },
+    "/categories/{categoryId}": {
+      "schema": "MainCategory",
+      "description": "Saves and manages high-level product catalog main categories"
+    },
+    "/subcategories/{subcategoryId}": {
+      "schema": "Subcategory",
+      "description": "Saves and manages subcategories containing specialized attributes and schemas"
+    },
+    "/brands/{brandId}": {
+      "schema": "Brand",
+      "description": "Saves and manages brands with official approved models"
+    },
+    "/pending_models/{pendingModelId}": {
+      "schema": "PendingModel",
+      "description": "Saves and manages custom models pending review"
+    }
+  }
+}

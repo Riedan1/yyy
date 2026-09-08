@@ -1,0 +1,6 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "database": "ai-studio-smartshoppinglis-0c8edd99-65cd-4609-a553-d87eed1b674b"
+  }
+}
