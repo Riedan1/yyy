@@ -2,9 +2,307 @@ import { GrowthCampaign } from "../../types/growthStudio";
 
 export const INITIAL_GROWTH_CAMPAIGNS: GrowthCampaign[] = [
   {
+    id: "camp-trading-ebook",
+    storeId: "store-1",
+    name: "Arabic Trading E-Book Campaign — خطواتك الأولى للربح في التداول",
+    product: {
+      id: "prod-trading-ebook-1",
+      name: "كتاب خطواتك الأولى للربح في التداول",
+      price: 3900,
+      originalPrice: 5800,
+      imageUrl: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&q=80",
+      category: "Digital Books & Courses",
+      description: "دليل عملي شامل واستراتيجيات مثبتة إحصائياً لقراءة الشموع اليابانية، إدارة المخاطر، وتنفيذ صفقات رابحة من الصفر حتى الاحتراف."
+    },
+    offer: "خصم 35% لفترة محدودة + شحن مجاني لكافة الولايات مع الدفع عند الاستلام",
+    trafficSources: ["Facebook", "Instagram", "TikTok", "Snapchat", "WhatsApp"],
+    goal: "purchases",
+    status: "active",
+    createdAt: "2026-09-01T10:00:00Z",
+    updatedAt: "2026-09-17T08:30:00Z",
+    distributionMode: "smart",
+    distributionRationale: "Landing Page 01 (Arabic Trading Masterclass) achieves 11.8% conversion rate with high engagement from algorithmic and retail finance traffic.",
+    smartLinkSlug: "trading-ebook-arabic",
+    settings: {
+      confidenceThreshold: 150,
+      autoOptimize: true,
+      pixelTracking: true
+    },
+    landingPages: [
+      {
+        id: "lp-trade-01",
+        campaignId: "camp-trading-ebook",
+        name: "صفحة الهبوط الرئيسية — التداول المالي",
+        status: "active",
+        strategyFocus: "benefits",
+        trafficAllocation: 60,
+        suggestedAllocation: 65,
+        language: "ar",
+        currency: "DA",
+        market: "Algeria & MENA",
+        theme: {
+          primaryColor: "#0A1F44",
+          accentColor: "#E2A26C",
+          secondaryColor: "#4A90E2",
+          backgroundColor: "#070F1E",
+          cardBackgroundColor: "#0E1C36",
+          textColor: "#F4F6F8",
+          fontFamily: "'Cairo', 'Tajawal', sans-serif",
+          buttonStyle: "pill",
+          badgeText: "الكتاب المالي الأكثر مبيعاً",
+          backgroundStyle: "gradient",
+          backgroundGradient: "linear-gradient(180deg, #070F1E 0%, #0A1F44 45%, #08152B 100%)",
+          backgroundImageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80",
+          overlayColor: "#0A1F44",
+          overlayOpacity: 0.85,
+          buttonColor: "#E2A26C",
+          buttonTextColor: "#0A1F44"
+        },
+        metrics: {
+          visitors: 2450,
+          uniqueVisitors: 2180,
+          sessions: 2600,
+          pageViews: 4120,
+          addToCart: 480,
+          checkoutStarted: 390,
+          conversions: 289,
+          revenue: 1127100,
+          averageOrderValue: 3900
+        },
+        sourceBreakdown: {
+          Instagram: { visitors: 1120, conversions: 138, revenue: 538200 },
+          Facebook: { visitors: 820, conversions: 96, revenue: 374400 },
+          TikTok: { visitors: 390, conversions: 42, revenue: 163800 },
+          WhatsApp: { visitors: 120, conversions: 13, revenue: 50700 }
+        },
+        deviceBreakdown: {
+          mobile: { visitors: 2156, conversions: 254, revenue: 990600 },
+          desktop: { visitors: 245, conversions: 31, revenue: 120900 },
+          tablet: { visitors: 49, conversions: 4, revenue: 15600 }
+        },
+        sections: [
+          {
+            id: "sec-tr-hero",
+            type: "hero",
+            visible: true,
+            headline: "ابدأ نجاحك في التداول",
+            subheadline: "دليلك خطوة بخطوة إلى صفقات مربحة وإتقان قراءة حركة الأسعار دون تعقيد",
+            badge: "دليل عملي شامل • للمبتدئين والمتقدمين",
+            imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80",
+            ctaText: "احصل على دليلي الآن",
+            ctaSubtext: "شحن سريع لكافة الولايات • الدفع عند الاستلام مع المعاينة",
+            price: 3900,
+            originalPrice: 5800,
+            items: [
+              { title: "التقييم العام", description: "4.9 / 5 من أكثر من 5,200 متداول عربي" }
+            ]
+          },
+          {
+            id: "sec-tr-problem",
+            type: "problem",
+            visible: true,
+            headline: "لماذا يخسر 90% من المتداولين أموالهم في أول 90 يوماً؟",
+            subheadline: "الدخول إلى الأسواق المالية دون استراتيجية واضحة وخطة إدارة مخاطر صارمة يحول التداول إلى مجرد مقامرة عشوائية.",
+            badge: "المشكلة الشائعة",
+            items: [
+              { title: "الاعتماد على العواطف والشائعات", description: "الشراء بدافع الطمع عند القمم والبيع بدافع الخوف عند القيعان دون أي تحليل منطقي." },
+              { title: "غياب خطة صارمة لإدارة رأس المال", description: "المخاطرة بنسب مئوية مبالغ فيها تؤدي إلى تصفير الحساب في صفقات معدودة." },
+              { title: "تشتت المعلومات والمصادر غير الموثوقة", description: "متابعة عشرات المؤشرات المتضاربة وقنوات التوصيات العشوائية التي تزيد من الارتباك." }
+            ]
+          },
+          {
+            id: "sec-tr-solution",
+            type: "solution",
+            visible: true,
+            headline: "الحل بين يديك: كتاب خطواتك الأولى للربح في التداول",
+            subheadline: "دليل منهجي تطبيقي يبسط لك أسرار صانع السوق ويمنحك خريطة طريق واضحة ومحددة لكل صفقة.",
+            imageUrl: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&q=80",
+            items: [
+              { title: "منهجية مبسطة خطوة بخطوة", description: "شرح سلس من الصفر بالرسوم التوضيحية لجميع نماذج الشموع اليابانية الكلاسيكية." },
+              { title: "قاعدة الـ 1% الذهبية لحماية رأس المال", description: "كيف تضمن بقاءك في السوق لأطول فترة مع تحقيق نمو تراكمي آمن لمحفظتك." },
+              { title: "قوائم تحقق وتطبيقات يومية", description: "خطة واضحة لا تقبل اللبس لتحديد نقاط الدخول، وقف الخسارة، وأخذ الأرباح بدقة." }
+            ]
+          },
+          {
+            id: "sec-tr-product",
+            type: "product",
+            visible: true,
+            headline: "اطلب نسختك الورقية الفاخرة الآن",
+            subheadline: "طباعة فاخرة بالألوان مع ملحق الرسوم البيانية وقوالب التداول اليومية الجاهزة",
+            price: 3900,
+            originalPrice: 5800,
+            imageUrl: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&q=80",
+            ctaText: "تأكيد الطلب الفوري • الدفع عند الاستلام"
+          },
+          {
+            id: "sec-tr-benefits",
+            type: "benefits",
+            visible: true,
+            headline: "الفوائد التي ستحصل عليها من هذا الكتاب",
+            subheadline: "مهارات عملية قابلة للتطبيق الفوري في أسواق الأسهم والعملات الرقمية والفوركس والذهب",
+            items: [
+              { title: "تعلم استراتيجيات مجربة", description: "استراتيجيات تداول مبنية على حركة السعر الحقيقية (Price Action) أثبتت نجاحها إحصائياً." },
+              { title: "الانضباط النفسي وإدارة المشاعر", description: "التخلص من فخ الخوف والطمع والتداول كالمحترفين بهدوء وثبات كاملين." },
+              { title: "أمثلة حية من واقع السوق", description: "شروحات تفصيلية لصفقات حقيقية موثقة قبل وبعد تحقق الأهداف." },
+              { title: "انضمام مجاني لمجتمع المتداولين", description: "فرصة مناقشة الفرص الأسبوعية وتبادل التحليلات مع نخبة من القراء والمؤلفين." }
+            ]
+          },
+          {
+            id: "sec-tr-how",
+            type: "how_it_works",
+            visible: true,
+            headline: "كيف تبدأ رحلتك الاستثمارية في 3 خطوات؟",
+            subheadline: "مسار واضح يضمن لك الاستيعاب السريع والتطبيق دون أي ارتباك",
+            items: [
+              { title: "1. اطلب نسختك الآن", description: "املأ بياناتك في دقيقة واحدة لتصلك النسخة لباب منزلك مع حق فتح الطرد ومعاينته قبل السداد." },
+              { title: "2. اقرأ وطبق على حساب تجريبي", description: "أكمل قراءة الفصول ونفذ التمارين المرفقة في بيئة آمنة بدون أي مخاطرة بأموالك." },
+              { title: "3. ابدأ التداول الحقيقي بثقة", description: "ادخل السوق الحقيقي متسلحاً بخطة متكاملة وإدارة مخاطر صارمة تمنحك الأفضلية." }
+            ]
+          },
+          {
+            id: "sec-tr-why",
+            type: "why_choose",
+            visible: true,
+            headline: "لماذا طريقتنا تحقق النجاح؟",
+            subheadline: "خبرة متراكمة ومحتوى استثنائي كتبه متداولون محترفون بخبرة تفوق 8 سنوات",
+            items: [
+              { title: "خبرة واقعية وليست نظريات", description: "كافة الاستراتيجيات والقواعد صيغت بناءً على صفقات حقيقية في الأسواق العربية والعالمية." },
+              { title: "أكثر من 5,200 متداول ناجح", description: "تقييم 4.9 من 5 وإشادة واسعة من مجتمعات التداول في الجزائر والخليج والشرق الأوسط." },
+              { title: "محتوى عربي أصيل وخالٍ من الحشو", description: "كل صفحة وكل فقرة تركز مباشرة على ما تحتاجه للنجاح دون إطالة غير مفيدة." }
+            ]
+          },
+          {
+            id: "sec-tr-faq",
+            type: "faq",
+            visible: true,
+            headline: "الأسئلة الشائعة حول الكتاب وطريقة الاستلام",
+            subheadline: "إجابات واضحة ومباشرة على أكثر ما يسأل عنه المهتمون",
+            items: [
+              { title: "كيف أحصل على الكتاب الإلكتروني أو الورقي؟", description: "يصلك الطرد الورقي مع ملحقاته إلى عنوانك في كافة الولايات مع شركة التوصيل، وتدفع نقداً بعد المعاينة." },
+              { title: "هل يناسب من ليس لديه أي خلفية عن الأسواق المالية؟", description: "نعم تماماً، يبدأ الكتاب بشرح المفاهيم من الصفر بأسلوب مبسّط وواضح دون افتراض أي خبرة مسبقة." },
+              { title: "هل القواعد تنطبق على العملات الرقمية والأسهم؟", description: "بالتأكيد، مبادئ حركة السعر وإدارة المخاطر تنطبق على الكريبتو، الفوركس، الأسهم، والسلع كالذهب والنفط." },
+              { title: "ماذا لو كان لدي استفسار أثناء القراءة؟", description: "ستجد داخل الكتاب رمز QR خاصاً للتواصل مع فريق الدعم الفني والمؤلفين للإجابة على تساؤلاتك." }
+            ]
+          },
+          {
+            id: "sec-tr-guarantee",
+            type: "guarantee",
+            visible: true,
+            headline: "ضمان استرداد المال خلال 30 يومًا",
+            subheadline: "نحن نتحمل المخاطرة كاملة عنك. إذا طبقت قواعد الكتاب ولم تجد فيه فائدة نوعية في تداولك، فلك كامل الحق في استرداد ثمن الكتاب دون أي تعقيدات.",
+            badge: "ضمان ذهبي بلا شروط",
+            ctaText: "اطلب نسختك بأمان تام"
+          },
+          {
+            id: "sec-tr-cta",
+            type: "cta",
+            visible: true,
+            headline: "انضم إلى مئات المتداولين الناجحين",
+            subheadline: "لا تدع الوقت يمر وأنت تتداول بطرق عشوائية. امتلك دليلك اليوم وابدأ التداول كالمحترفين.",
+            ctaText: "ابدأ الربح اليوم • احصل على نسختك الآن",
+            ctaSubtext: "دفع آمن عند الاستلام • فحص الطرد أمام عامل التوصيل متاح"
+          },
+          {
+            id: "sec-tr-footer",
+            type: "footer",
+            visible: true,
+            headline: "جميع الحقوق محفوظة © خطواتك الأولى للربح في التداول • منصة يومي Yume"
+          }
+        ]
+      },
+      {
+        id: "lp-trade-02",
+        campaignId: "camp-trading-ebook",
+        name: "صفحة الهبوط البديلة — عرض محدود",
+        status: "active",
+        strategyFocus: "offer_urgency",
+        trafficAllocation: 40,
+        suggestedAllocation: 35,
+        language: "ar",
+        currency: "DA",
+        market: "Algeria & MENA",
+        theme: {
+          primaryColor: "#0A1F44",
+          accentColor: "#E2A26C",
+          secondaryColor: "#4A90E2",
+          backgroundColor: "#0F172A",
+          cardBackgroundColor: "#1E293B",
+          textColor: "#F8FAFC",
+          fontFamily: "'Cairo', 'Tajawal', sans-serif",
+          buttonStyle: "rounded",
+          badgeText: "خصم 35% لليوم فقط",
+          backgroundStyle: "gradient",
+          backgroundGradient: "linear-gradient(180deg, #0F172A 0%, #1E293B 100%)",
+          backgroundImageUrl: "https://images.unsplash.com/photo-1508962914676-134849a727f0?w=1200&q=80",
+          overlayColor: "#0A1F44",
+          overlayOpacity: 0.85,
+          buttonColor: "#E2A26C",
+          buttonTextColor: "#0A1F44"
+        },
+        metrics: {
+          visitors: 1420,
+          uniqueVisitors: 1250,
+          sessions: 1530,
+          pageViews: 2410,
+          addToCart: 280,
+          checkoutStarted: 215,
+          conversions: 158,
+          revenue: 616200,
+          averageOrderValue: 3900
+        },
+        sourceBreakdown: {
+          Instagram: { visitors: 650, conversions: 78, revenue: 304200 },
+          TikTok: { visitors: 480, conversions: 51, revenue: 198900 },
+          Facebook: { visitors: 290, conversions: 29, revenue: 113100 }
+        },
+        deviceBreakdown: {
+          mobile: { visitors: 1250, conversions: 141, revenue: 549900 },
+          desktop: { visitors: 142, conversions: 15, revenue: 58500 },
+          tablet: { visitors: 28, conversions: 2, revenue: 7800 }
+        },
+        sections: [
+          {
+            id: "sec-tr2-hero",
+            type: "hero",
+            visible: true,
+            headline: "دليلك خطوة بخطوة إلى صفقات مربحة",
+            subheadline: "تعلم قراءة الشموع اليابانية ونماذج حركة الأسعار واستراتيجيات حماية رأس المال",
+            badge: "عرض حصري ينتهي الليلة",
+            imageUrl: "https://images.unsplash.com/photo-1508962914676-134849a727f0?w=1200&q=80",
+            ctaText: "اطلب نسختك الآن بخصم 35%",
+            ctaSubtext: "توصيل سريع لباب منزلك • الدفع بعد المعاينة",
+            price: 3900,
+            originalPrice: 5800
+          },
+          {
+            id: "sec-tr2-benefits",
+            type: "benefits",
+            visible: true,
+            headline: "ماذا ستتعلم بالتحديد؟",
+            subheadline: "استراتيجيات تداول مثبتة وخالية من التعقيد",
+            items: [
+              { title: "قراءة احترافية لحركة السعر", description: "تحديد القمم والقيعان الحقيقية وفهم سلوك السيولة الذكية." },
+              { title: "حماية الأرباح ووقف الخسارة", description: "معادلات رياضية بسيطة لحساب حجم الصفقة بدقة." },
+              { title: "أمثلة حية وتطبيقات", description: "شروحات من الشارت الحقيقي لمختلف الأسواق المالية." }
+            ]
+          },
+          {
+            id: "sec-tr2-cta",
+            type: "cta",
+            visible: true,
+            headline: "ابدأ مسيرتك في التداول اليوم",
+            subheadline: "انضم إلى المتداولين الناجحين الذين غيروا طريقة تعاملهم مع الأسواق.",
+            ctaText: "تأكيد الطلب الفوري",
+            ctaSubtext: "الدفع عند الاستلام مع المعاينة"
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: "camp-summer-shoes",
     storeId: "store-1",
-    name: "Summer Breathable Shoes • حذاء الصيف المريح",
+    name: "Summer Ergonomic Footwear Campaign",
     product: {
       id: "prod-summer-shoes-1",
       name: "Ultra-Light Ergonomic Summer Sneakers",
@@ -12,19 +310,19 @@ export const INITIAL_GROWTH_CAMPAIGNS: GrowthCampaign[] = [
       originalPrice: 6800,
       imageUrl: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80",
       category: "Footwear",
-      description: "حذاء طبي صيفي مريح ومضاد للتعرق، مثالي للمشي اليومي ودرجات الحرارة المرتفعة."
+      description: "Orthopedic, ultra-breathable summer sneakers engineered for maximum comfort, all-day walking, and temperature control."
     },
-    offer: "اشتري 1 واحصل على الثاني بنصف السعر + توصيل مجاني",
+    offer: "Buy 1 Get 2nd at 50% Off + Free Nationwide Express Delivery",
     trafficSources: ["Instagram", "TikTok", "Facebook", "Snapchat", "WhatsApp"],
     goal: "purchases",
     status: "active",
     createdAt: "2026-08-20T10:00:00Z",
     updatedAt: "2026-09-03T09:30:00Z",
     distributionMode: "smart",
-    distributionRationale: "Landing Page 02 is receiving 45% traffic because its purchase conversion rate (9.4%) is outperforming others.",
-    smartLinkSlug: "summer-shoes-dz",
+    distributionRationale: "Landing Page 02 is receiving 45% traffic allocation because its purchase conversion rate (9.4%) significantly outperforms other pages.",
+    smartLinkSlug: "summer-sneakers",
     settings: {
-      confidenceThreshold: 200,
+      confidenceThreshold: 150,
       autoOptimize: true,
       pixelTracking: true
     },
@@ -41,9 +339,9 @@ export const INITIAL_GROWTH_CAMPAIGNS: GrowthCampaign[] = [
           primaryColor: "#4f46e5",
           accentColor: "#06b6d4",
           backgroundColor: "#ffffff",
-          fontFamily: "Tajawal, sans-serif",
+          fontFamily: "Inter, sans-serif",
           buttonStyle: "pill",
-          badgeText: "الراحة اليومية القصوى"
+          badgeText: "Ultimate Daily Comfort"
         },
         metrics: {
           visitors: 1250,
@@ -73,58 +371,58 @@ export const INITIAL_GROWTH_CAMPAIGNS: GrowthCampaign[] = [
             id: "sec-1",
             type: "hero",
             visible: true,
-            headline: "وداعاً لآلام القدمين وحرارة الصيف مع حذاء ألترا لايت المريح",
-            subheadline: "تصميم طبي مبتكر بنعل هوائي مضاد للصدمات وقماش شبكي يسمح بالتنفس الفوري طوال اليوم.",
-            badge: "الأكثر طلباً لصيف 2026",
-            ctaText: "اطلب الآن والدفع عند الاستلام",
-            ctaSubtext: "توصيل سريع متوفر لكافة الـ 58 ولاية",
+            headline: "Relieve Foot Fatigue & Stay Cool with Ultra-Light Comfort Sneakers",
+            subheadline: "Innovative orthopedic air-sole cushioning with 360-degree breathable mesh engineered for all-day continuous support.",
+            badge: "Top Rated Comfort Collection",
+            ctaText: "Order Now - Cash on Delivery",
+            ctaSubtext: "Express delivery available across all provinces",
             imageUrl: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80"
           },
           {
             id: "sec-2",
             type: "benefits",
             visible: true,
-            headline: "لماذا يفضل أكثر من 12,000 جزائري هذا الحذاء؟",
-            subheadline: "مميزات صممت خصيصاً لتناسب نمط حياتك اليومي",
+            headline: "Why Over 12,000 Verified Customers Choose This Model",
+            subheadline: "Purpose-built features designed for demanding everyday routines",
             items: [
-              { title: "خفة وزن استثنائية (210 غ)", description: "لن تشعر بوزن الحذاء على قدمك حتى بعد 10 ساعات مشي متواصل." },
-              { title: "نعل طبي لتقويم المشي", description: "يمتص الصدمات ويقلل الضغط على الركبة وفقرات أسفل الظهر." },
-              { title: "تهوية ذكية 360 درجة", description: "أنسجة مسامية تمنع الرطوبة والروائح الكريهة تماماً في الأيام الحارة." }
+              { title: "Ultra-Lightweight (210g)", description: "Zero heavy drag on your feet even after 10 hours of non-stop walking." },
+              { title: "Orthopedic Shock Absorption", description: "Absorbs ground impact and relieves stress on knees and lower back joints." },
+              { title: "Adaptive Aeration Matrix", description: "High-permeability fabric prevents heat buildup and moisture accumulation." }
             ]
           },
           {
             id: "sec-3",
             type: "urgency",
             visible: true,
-            headline: "عرض خاص محدود: اشتري 1 واحصل على الثاني بـ 50% خصم!",
-            subheadline: "الكمية المتبقية في المخزن: 24 زوج فقط اليوم",
-            badge: "عرض الصيف الخاص"
+            headline: "Limited Seasonal Promotion: Buy 1, Get 2nd at 50% Off",
+            subheadline: "Remaining warehouse allocation for today: 24 pairs only",
+            badge: "Seasonal Flash Offer"
           },
           {
             id: "sec-4",
             type: "reviews",
             visible: true,
-            headline: "آراء زبائننا الموثقة في الجزائر",
-            subheadline: "تجارب حقيقية من ولايات الجزائر، وهران، قسنطينة، وسطيف",
+            headline: "Verified Customer Feedback",
+            subheadline: "Real reviews from customers across major metropolitan hubs",
             items: [
-              { title: "ياسين • الجزائر العاصمة", description: "جودة ممتازة وخفيف جداً، وصلني في 24 ساعة عبر ياليدين والمقاس مضبوط 100%.", rating: 5 },
-              { title: "فاطمة • سطيف", description: "شريتو لزوجي وعجبو بزااف، راح نزيد نطلب زوج آخر لوالدي، يعطيكم الصحة.", rating: 5 }
+              { title: "David M. - Verified Buyer", description: "Excellent cushioning and very lightweight. Delivered quickly and sizing was 100% true.", rating: 5 },
+              { title: "Sarah T. - Verified Buyer", description: "Bought a pair for my husband and he wears them daily. Ordering a second pair right now.", rating: 5 }
             ]
           },
           {
             id: "sec-5",
             type: "guarantee",
             visible: true,
-            headline: "ضمان الاستبدال المجاني ومعاينة المنتج قبل الدفع",
-            subheadline: "افتح طردك أمام عامل التوصيل وتأكد من الجودة والمقاس قبل تسليم أي مبلغ."
+            headline: "Inspection Guarantee & Free Size Exchange",
+            subheadline: "Inspect your package upon delivery before completing payment."
           },
           {
             id: "sec-6",
             type: "cta",
             visible: true,
-            headline: "لا تفوت فرصة العرض الصيفي الحصري",
-            subheadline: "املأ بياناتك في دقيقة واحدة وسيتم الاتصال بك لتأكيد طلبك وتجهيز الشحن فوراً.",
-            ctaText: "تأكيد الطلب الآن بنقرة واحدة"
+            headline: "Claim Your Special Seasonal Offer Today",
+            subheadline: "Quick checkout form with instant dispatch confirmation.",
+            ctaText: "Confirm Order Now"
           }
         ]
       },
@@ -140,9 +438,9 @@ export const INITIAL_GROWTH_CAMPAIGNS: GrowthCampaign[] = [
           primaryColor: "#059669",
           accentColor: "#10b981",
           backgroundColor: "#f8fafc",
-          fontFamily: "Tajawal, sans-serif",
+          fontFamily: "Inter, sans-serif",
           buttonStyle: "pill",
-          badgeText: "تقييم 4.9/5 من أكثر من 3,400 زبون"
+          badgeText: "Rated 4.9/5 by 3,400+ Verified Buyers"
         },
         metrics: {
           visitors: 1180,
@@ -172,44 +470,44 @@ export const INITIAL_GROWTH_CAMPAIGNS: GrowthCampaign[] = [
             id: "sec-201",
             type: "hero",
             visible: true,
-            headline: "الحذاء الذي تصدّر تريند الصيف: شاهد لماذا أجمع عليه المؤثرون وأطباء الأقدام",
-            subheadline: "أكثر من 3,400 تقييم 5 نجوم في جميع ولايات الوطن. راحة فورية تدوم طوال اليوم.",
-            badge: "الخيار الأول للزبائن في الجزائر",
-            ctaText: "انضم إلى آلاف الزبائن السعداء",
-            ctaSubtext: "الدفع بعد المعاينة عند باب بيتك",
+            headline: "The Trending Footwear Sensation: See Why Podiatrists & Active Professionals Agree",
+            subheadline: "Over 3,400 verified 5-star ratings nationwide. Immediate cloud-like comfort that lasts from morning till night.",
+            badge: "Leading Customer Choice",
+            ctaText: "Join Thousands of Happy Customers",
+            ctaSubtext: "Cash on delivery with full doorstep inspection",
             imageUrl: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80"
           },
           {
             id: "sec-202",
             type: "testimonials",
             visible: true,
-            headline: "قصص وتجارب واقعية بالصور والفيديو",
-            subheadline: "زبائن حقيقيون وثقوا تجربتهم بعد أسابيع من الاستخدام اليومي",
+            headline: "Real Results & Long-Term Feedback",
+            subheadline: "Customer stories documented after weeks of rigorous daily wear",
             items: [
-              { title: "د. كمال مسعودي • طبيب عام", description: "أنصح به لكل من يقف لساعات طويلة في العمل. النعل يخفف الضغط العظمي بنسبة واضحة.", rating: 5 },
-              { title: "أمين طهراوي • أستاذ", description: "أفضل استثمار لصيفي، خفيف ومهوّي وشكله أنيق في اللبس مع الجينز واللباس الرياضي.", rating: 5 },
-              { title: "سارة بن علي • مهندسة", description: "أخذت زوجين لي ولأختي. المعاملة احترافية والتوصيل سريع جداً إلى وهران.", rating: 5 }
+              { title: "Dr. K. Vance - General Practitioner", description: "I recommend these to anyone on their feet during extended clinic shifts. Noticeable joint relief.", rating: 5 },
+              { title: "Michael S. - Educator", description: "Best footwear upgrade of the year. Breathable, feather-light, and pairs nicely with casual wear.", rating: 5 },
+              { title: "Elena R. - Architect", description: "Ordered two pairs for site inspections. Super fast delivery and high quality finish.", rating: 5 }
             ]
           },
           {
             id: "sec-203",
             type: "comparison",
             visible: true,
-            headline: "مقارنة صريحة: حذاء ألترا لايت مقابل الأحذية الرياضية التقليدية",
-            subheadline: "اكتشف الفارق بنفسك قبل أن تقرر",
+            headline: "Head-to-Head: Ultra-Light Comfort vs. Standard Sneakers",
+            subheadline: "Examine the technical distinction before making your decision",
             items: [
-              { title: "الوزن والراحة", description: "ألترا لايت: 210غ مقابل 480غ للأحذية العادية." },
-              { title: "التهوية ومقاومة الحرارة", description: "شبكة هوائية سريعة الجفاف تمنع التعرق تماماً." },
-              { title: "خدمة ما بعد البيع", description: "استبدال واسترجاع مضمون 100% بدون أي تعقيد." }
+              { title: "Weight & Agility", description: "Ultra-Light: 210g vs 480g for traditional athletic shoes." },
+              { title: "Air Circulation", description: "360-degree micro-perforated mesh prevents sweating completely." },
+              { title: "Warranty & Support", description: "100% free size exchange and doorstep replacement guarantee." }
             ]
           },
           {
             id: "sec-204",
             type: "cta",
             visible: true,
-            headline: "اطلب الآن واستفد من خصم 25% مع التوصيل السريع",
-            subheadline: "سارع قبل نفاد المقاسات الأكثر طلباً (40 - 44)",
-            ctaText: "احجز مقاسك الآن قبل نفاد المخزون"
+            headline: "Order Now & Save 25% with Express Courier Shipping",
+            subheadline: "Secure your size while popular inventory remains in stock (Sizes 40 - 45)",
+            ctaText: "Reserve Your Pair Now"
           }
         ]
       },
@@ -225,9 +523,9 @@ export const INITIAL_GROWTH_CAMPAIGNS: GrowthCampaign[] = [
           primaryColor: "#dc2626",
           accentColor: "#f97316",
           backgroundColor: "#ffffff",
-          fontFamily: "Tajawal, sans-serif",
+          fontFamily: "Inter, sans-serif",
           buttonStyle: "pill",
-          badgeText: "تخفيض فلاش ينتهي قريباً"
+          badgeText: "Flash Clearance Ends Tonight"
         },
         metrics: {
           visitors: 1210,
@@ -248,8 +546,8 @@ export const INITIAL_GROWTH_CAMPAIGNS: GrowthCampaign[] = [
           WhatsApp: { visitors: 50, conversions: 2, revenue: 9800 }
         },
         deviceBreakdown: {
-          mobile: { visitors: 1020, conversions: 65, revenue: 318500 },
-          desktop: { visitors: 140, conversions: 8, revenue: 39200 },
+          mobile: { visitors: 1060, conversions: 65, revenue: 318500 },
+          desktop: { visitors: 100, conversions: 8, revenue: 39200 },
           tablet: { visitors: 50, conversions: 3, revenue: 14700 }
         },
         sections: [
@@ -257,78 +555,67 @@ export const INITIAL_GROWTH_CAMPAIGNS: GrowthCampaign[] = [
             id: "sec-301",
             type: "hero",
             visible: true,
-            headline: "تخفيض حصري لـ 48 ساعة فقط: 4,900 دج بدل 6,800 دج مع توصيل مجاني!",
-            subheadline: "عرض خاص لرواد وسائل التواصل الاجتماعي: احصل على حذاء الصيف الأكثر راحة بأفضل سعر في السوق.",
-            badge: "توفير فوري 1,900 دج",
-            ctaText: "اغتنم العرض الترويجي الآن",
-            ctaSubtext: "العرض متاح حتى نفاد الكمية المخصصة",
-            imageUrl: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&q=80"
+            headline: "Warehouse Clearance Event: Premium Ergonomic Summer Sneakers at 40% Off",
+            subheadline: "Exclusive batch pricing available for direct factory distribution. Final inventory clearance.",
+            badge: "Countdown Offer: 40% Off",
+            ctaText: "Claim 40% Discount Now",
+            ctaSubtext: "Express delivery with cash on delivery payment",
+            imageUrl: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80"
           },
           {
             id: "sec-302",
             type: "urgency",
             visible: true,
-            headline: "العداد التنازلي لانتهاء عرض التخفيض الفوري",
-            subheadline: "سينتهي العرض تلقائياً مع انتهاء العداد أو نفاد آخر 18 زوج متبقية",
-            badge: "Flash Sale"
+            headline: "Limited Availability: Only 28 Pairs Left at Promotional Price",
+            subheadline: "Once this batch is depleted, regular retail pricing of 6,800 DA will resume automatically.",
+            badge: "Low Stock Alert"
           },
           {
             id: "sec-303",
-            type: "features",
+            type: "faq",
             visible: true,
-            headline: "ماذا ستحصل في باقتك اليوم؟",
-            subheadline: "محتويات الطرد الأصلي من متجر YOMI المعتمد",
+            headline: "Frequently Asked Questions",
+            subheadline: "Clear answers to help you order with confidence",
             items: [
-              { title: "حذاء ألترا لايت الأصلي", description: "بالمقاس واللون الذي تختاره في استمارة الطلب." },
-              { title: "جوارب قطنية رياضية مجاناً", description: "هدية ترحيبية مرفقة مع كل طرد هذا الأسبوع." },
-              { title: "توصيل سريع حتى باب المنزل", description: "مع شركات التوصيل المعتمدة (Yalidine, ZR Express)." }
+              { title: "Can I inspect the shoes before paying?", description: "Yes, you can inspect your package directly with the delivery agent prior to payment." },
+              { title: "What if the size does not fit perfectly?", description: "We provide an immediate, free size exchange service within 48 hours." },
+              { title: "How fast is delivery?", description: "Orders are dispatched within 24 hours with typical delivery in 24 to 48 hours." }
             ]
           },
           {
             id: "sec-304",
-            type: "faq",
-            visible: true,
-            headline: "الأسئلة الأكثر شيوعاً قبل إتمام طلبك",
-            subheadline: "كل ما تحتاج معرفته عن الشحن وطرق الدفع والاستبدال",
-            items: [
-              { title: "كيف يتم الدفع؟", description: "الدفع نقداً عند استلام الطرد بيدك وبعد معاينته." },
-              { title: "ماذا لو لم يناسبني المقاس؟", description: "نوفر استبدال مجاني فوري للمقاس خلال 48 ساعة." }
-            ]
-          },
-          {
-            id: "sec-305",
             type: "cta",
             visible: true,
-            headline: "أكد طلبك الآن قبل إعادة السعر إلى 6,800 دج",
-            subheadline: "املأ البيانات أدناه وسيصلك اتصال لتأكيد العنوان ومقاس الحذاء.",
-            ctaText: "اطلب الآن مع الهدية المجانية"
+            headline: "Lock In Your Promotional Price Before Midnight",
+            subheadline: "Take advantage of factory clearance pricing while supplies last.",
+            ctaText: "Order Now - Pay on Delivery"
           }
         ]
       }
     ]
   },
   {
-    id: "camp-argan-ritual",
+    id: "camp-marine-gear",
     storeId: "store-1",
-    name: "Pure Argan Hair & Skin Ritual • باقة زيت الأركان الملكي",
+    name: "Marine & Nautical Gear Campaign",
     product: {
-      id: "prod-argan-ritual",
-      name: "100% Organic Pure Argan Oil Essence Set",
-      price: 3400,
-      originalPrice: 4800,
-      imageUrl: "https://images.unsplash.com/photo-1608248597359-545229598285?w=800&q=80",
-      category: "Beauty & Personal Care",
-      description: "زيت أركان بيولوجي نقي معصور على البارد لتغذية الشعر وتقوية البشرة وإعادة الحيوية الطبيعية."
+      id: "prod-marine-gear-1",
+      name: "Pro Waterproof Offshore Utility Pack",
+      price: 8500,
+      originalPrice: 11500,
+      imageUrl: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80",
+      category: "Outdoor & Marine",
+      description: "Submersible IPX8 waterproof dry bag system designed for sailing, coastal excursions, and demanding marine environments."
     },
-    offer: "باقة كاملة + سيروم مجاني عند شراء عبوتين",
-    trafficSources: ["Instagram", "TikTok", "Facebook", "Snapchat"],
+    offer: "Includes Free High-Visibility Dry Case + Free Courier Shipping",
+    trafficSources: ["Facebook", "Instagram", "Google", "TikTok", "WhatsApp"],
     goal: "purchases",
     status: "active",
     createdAt: "2026-08-25T14:00:00Z",
-    updatedAt: "2026-09-02T16:00:00Z",
+    updatedAt: "2026-09-05T16:00:00Z",
     distributionMode: "manual",
-    distributionRationale: "Manual distribution set by merchant: 50% for Landing Page 01 (Storytelling & Organic Purity) and 50% for Landing Page 02 (Dermatologist Proof).",
-    smartLinkSlug: "argan-ritual-dz",
+    distributionRationale: "Traffic distributed 35% to Landing Page A, 40% to Landing Page B, and 25% to Landing Page C.",
+    smartLinkSlug: "marine-utility",
     settings: {
       confidenceThreshold: 150,
       autoOptimize: false,
@@ -336,143 +623,213 @@ export const INITIAL_GROWTH_CAMPAIGNS: GrowthCampaign[] = [
     },
     landingPages: [
       {
-        id: "lp-argan-01",
-        campaignId: "camp-argan-ritual",
-        name: "Landing Page 01",
+        id: "lp-marine-01",
+        campaignId: "camp-marine-gear",
+        name: "Landing Page A",
         status: "active",
-        strategyFocus: "storytelling",
-        trafficAllocation: 50,
+        strategyFocus: "benefits",
+        trafficAllocation: 35,
+        suggestedAllocation: 30,
         theme: {
-          primaryColor: "#b45309",
-          accentColor: "#d97706",
-          backgroundColor: "#fffbeb",
-          fontFamily: "Tajawal, sans-serif",
-          buttonStyle: "rounded",
-          badgeText: "عضوي معصور على البارد 100%"
+          primaryColor: "#0284c7",
+          accentColor: "#0ea5e9",
+          backgroundColor: "#ffffff",
+          fontFamily: "Inter, sans-serif",
+          buttonStyle: "pill",
+          badgeText: "High AOV Bundle"
         },
         metrics: {
-          visitors: 820,
-          uniqueVisitors: 750,
-          sessions: 890,
+          visitors: 800,
+          uniqueVisitors: 720,
+          sessions: 860,
           pageViews: 1240,
-          addToCart: 130,
-          checkoutStarted: 95,
-          conversions: 68,
-          revenue: 231200,
-          averageOrderValue: 3400
+          addToCart: 110,
+          checkoutStarted: 78,
+          conversions: 50,
+          revenue: 450000,
+          averageOrderValue: 9000
         },
         sourceBreakdown: {
-          Instagram: { visitors: 450, conversions: 44, revenue: 149600 },
-          TikTok: { visitors: 220, conversions: 14, revenue: 47600 },
-          Facebook: { visitors: 110, conversions: 8, revenue: 27200 },
-          Snapchat: { visitors: 40, conversions: 2, revenue: 6800 }
+          Facebook: { visitors: 320, conversions: 22, revenue: 198000 },
+          Instagram: { visitors: 260, conversions: 18, revenue: 162000 },
+          Google: { visitors: 140, conversions: 7, revenue: 63000 },
+          TikTok: { visitors: 80, conversions: 3, revenue: 27000 }
         },
         deviceBreakdown: {
-          mobile: { visitors: 720, conversions: 61, revenue: 207400 },
-          desktop: { visitors: 70, conversions: 5, revenue: 17000 },
-          tablet: { visitors: 30, conversions: 2, revenue: 6800 }
+          mobile: { visitors: 580, conversions: 35, revenue: 315000 },
+          desktop: { visitors: 180, conversions: 12, revenue: 108000 },
+          tablet: { visitors: 40, conversions: 3, revenue: 27000 }
         },
         sections: [
           {
-            id: "sec-a1",
+            id: "sec-m1",
             type: "hero",
             visible: true,
-            headline: "سر الجمال الطبيعي: زيت الأركان النقي 100% لإشراقة بشرتك وقوة شعرك",
-            subheadline: "تركيبة غنية بفيتامين E والأحماض الدهنية الأساسية تعالج تقصف الشعر وتعيد نضارة البشرة من أول أسبوع.",
-            badge: "طبيعي ونقي 100%",
-            ctaText: "احصلي على باقتك الطبيعية الآن",
-            ctaSubtext: "دفع آمن عند الاستلام وتوصيل لكل الولايات",
-            imageUrl: "https://images.unsplash.com/photo-1608248597359-545229598285?w=800&q=80"
+            headline: "Heavy-Duty IPX8 Submersible Offshore Utility Pack",
+            subheadline: "Engineered for harsh coastal climates with military-grade tarpaulin and zero-leak welded seams.",
+            badge: "Professional Marine Grade",
+            ctaText: "Order Offshore Pack - Cash on Delivery",
+            ctaSubtext: "Includes complimentary phone dry-case",
+            imageUrl: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80"
           },
           {
-            id: "sec-a2",
+            id: "sec-m2",
             type: "benefits",
             visible: true,
-            headline: "فوائد مثبتة علمياً لشعرك وبشرتك",
-            subheadline: "عناية متكاملة بدون أي مواد كيميائية أو عطور صناعية",
+            headline: "Built to Withstand Saltwater, Wind, and Heavy Surges",
+            subheadline: "Tested under extreme offshore sea conditions",
             items: [
-              { title: "ترميم الشعر التالف والجاف", description: "يغذي بصيلات الشعر ويقضي على الهيشان والتساقط." },
-              { title: "ترطيب عميق ومكافحة التجاعيد", description: "يمتص بسرعة فائقة دون أن يترك ملمساً دهنياً مزعجاً." },
-              { title: "تقوية الأظافر ونضارة الرقبة", description: "عناية شاملة تستحقها إطلالتك اليومية." }
+              { title: "100% Submersible Seal", description: "Keeps electronics and documents fully bone dry even if dropped in water." },
+              { title: "Reinforced 500D Tarpaulin", description: "Resistant to abrasive rock surfaces, hooks, and UV degradation." },
+              { title: "Ergonomic Sternum Harness", description: "Padded load-dispersing straps provide comfort during all-day transit." }
             ]
           },
           {
-            id: "sec-a3",
+            id: "sec-m3",
             type: "cta",
             visible: true,
-            headline: "اطلبي الآن واستفيدي من عرض العبوتين + سيروم مجاني",
-            subheadline: "كمية العرض الشهري محدودة جداً",
-            ctaText: "تأكيد الطلب الترويجي"
+            headline: "Equip Your Next Coastal Expedition",
+            subheadline: "Dispatched with guaranteed inspection before payment.",
+            ctaText: "Claim Your Pack with Free Bonus"
           }
         ]
       },
       {
-        id: "lp-argan-02",
-        campaignId: "camp-argan-ritual",
-        name: "Landing Page 02",
+        id: "lp-marine-02",
+        campaignId: "camp-marine-gear",
+        name: "Landing Page B",
         status: "active",
         strategyFocus: "social_proof",
-        trafficAllocation: 50,
+        trafficAllocation: 40,
+        suggestedAllocation: 50,
         theme: {
-          primaryColor: "#047857",
-          accentColor: "#10b981",
+          primaryColor: "#0f766e",
+          accentColor: "#14b8a6",
           backgroundColor: "#ffffff",
-          fontFamily: "Tajawal, sans-serif",
+          fontFamily: "Inter, sans-serif",
           buttonStyle: "pill",
-          badgeText: "توصية خبراء العناية الطبيعية"
+          badgeText: "Leading Conversion Signal"
         },
         metrics: {
-          visitors: 850,
-          uniqueVisitors: 780,
-          sessions: 910,
-          pageViews: 1380,
-          addToCart: 165,
-          checkoutStarted: 118,
-          conversions: 84,
-          revenue: 285600,
-          averageOrderValue: 3400
+          visitors: 830,
+          uniqueVisitors: 750,
+          sessions: 890,
+          pageViews: 1390,
+          addToCart: 145,
+          checkoutStarted: 98,
+          conversions: 70,
+          revenue: 385000,
+          averageOrderValue: 5500
         },
         sourceBreakdown: {
-          Instagram: { visitors: 490, conversions: 56, revenue: 190400 },
-          TikTok: { visitors: 240, conversions: 20, revenue: 68000 },
-          Facebook: { visitors: 90, conversions: 6, revenue: 20400 },
-          Snapchat: { visitors: 30, conversions: 2, revenue: 6800 }
+          Facebook: { visitors: 340, conversions: 31, revenue: 170500 },
+          Instagram: { visitors: 280, conversions: 24, revenue: 132000 },
+          Google: { visitors: 130, conversions: 11, revenue: 60500 },
+          TikTok: { visitors: 80, conversions: 4, revenue: 22000 }
         },
         deviceBreakdown: {
-          mobile: { visitors: 760, conversions: 77, revenue: 261800 },
-          desktop: { visitors: 60, conversions: 5, revenue: 17000 },
-          tablet: { visitors: 30, conversions: 2, revenue: 6800 }
+          mobile: { visitors: 620, conversions: 52, revenue: 286000 },
+          desktop: { visitors: 160, conversions: 14, revenue: 77000 },
+          tablet: { visitors: 50, conversions: 4, revenue: 22000 }
         },
         sections: [
           {
-            id: "sec-b1",
+            id: "sec-mb1",
             type: "hero",
             visible: true,
-            headline: "الزيت العضوي الذي وثقت به أكثر من 8,000 سيدة جزائرية لنتائج حقيقية",
-            subheadline: "شاهد النتائج بالصور والفيديوهات قبل وبعد 14 يوماً من الاستخدام المنتظم.",
-            badge: "تقييم 4.95 من 5",
-            ctaText: "اكتشفي سر الشعر الصحي والحريري",
-            ctaSubtext: "توصيل سريع لباب الدار والدفع بعد الفحص",
-            imageUrl: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80"
+            headline: "Trusted by Captains & Marine Enthusiasts Across the Coastline",
+            subheadline: "See why experienced navigators choose the Pro Utility Pack for reliable gear protection.",
+            badge: "Leading Page - High Conversion",
+            ctaText: "Order Now - Doorstep Inspection",
+            ctaSubtext: "Free delivery across all coastal regions",
+            imageUrl: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80"
           },
           {
-            id: "sec-b2",
+            id: "sec-mb2",
             type: "testimonials",
             visible: true,
-            headline: "شهادات حية من زبوناتنا في الجزائر",
-            subheadline: "تجارب موثوقة من سيدات جربن الزيت وشاركن نتائجهن",
+            headline: "Field Reports from Offshore Skippers",
+            subheadline: "Unfiltered testimonials from active maritime professionals",
             items: [
-              { title: "مريم • قسنطينة", description: "شعري كان محروق بالصبغة، بعد أسبوعين حسيت بفرق هائل في الملمس واللمعان. برافو!", rating: 5 },
-              { title: "نادية • الجزائر العاصمة", description: "أحسن زيت استعملتو في حياتي، أصلي 100% والريحة نتاعو خفيفة وطبيعية.", rating: 5 }
+              { title: "Capt. Julian B.", description: "Used this through two seasons of coastal charters. Zero moisture penetration. Superb gear.", rating: 5 },
+              { title: "Samir K. - Scuba Instructor", description: "Indispensable on our dive boats. Sturdy zippers, airtight seal, and quick shipping.", rating: 5 }
             ]
           },
           {
-            id: "sec-b3",
+            id: "sec-mb3",
             type: "cta",
             visible: true,
-            headline: "سارعي بالحصول على عبوتك قبل نفاد الدفعة المعصورة حديثاً",
-            subheadline: "الدفع عند الاستلام مع إمكانية المعاينة",
-            ctaText: "اطلبي الآن بسعر 3,400 دج"
+            headline: "Upgrade to Professional Grade Marine Storage",
+            subheadline: "Cash on delivery payment with immediate shipping dispatch.",
+            ctaText: "Confirm Your Order Now"
+          }
+        ]
+      },
+      {
+        id: "lp-marine-03",
+        campaignId: "camp-marine-gear",
+        name: "Landing Page C",
+        status: "active",
+        strategyFocus: "offer_urgency",
+        trafficAllocation: 25,
+        suggestedAllocation: 20,
+        theme: {
+          primaryColor: "#b91c1c",
+          accentColor: "#ea580c",
+          backgroundColor: "#ffffff",
+          fontFamily: "Inter, sans-serif",
+          buttonStyle: "pill",
+          badgeText: "Limited Harbor Special"
+        },
+        metrics: {
+          visitors: 790,
+          uniqueVisitors: 710,
+          sessions: 840,
+          pageViews: 1110,
+          addToCart: 98,
+          checkoutStarted: 66,
+          conversions: 55,
+          revenue: 330000,
+          averageOrderValue: 6000
+        },
+        sourceBreakdown: {
+          Facebook: { visitors: 310, conversions: 23, revenue: 138000 },
+          Instagram: { visitors: 270, conversions: 19, revenue: 114000 },
+          Google: { visitors: 130, conversions: 8, revenue: 48000 },
+          TikTok: { visitors: 80, conversions: 5, revenue: 30000 }
+        },
+        deviceBreakdown: {
+          mobile: { visitors: 570, conversions: 38, revenue: 228000 },
+          desktop: { visitors: 170, conversions: 13, revenue: 78000 },
+          tablet: { visitors: 50, conversions: 4, revenue: 24000 }
+        },
+        sections: [
+          {
+            id: "sec-mc1",
+            type: "hero",
+            visible: true,
+            headline: "End of Season Marine Gear Clearance: Save 30% Today",
+            subheadline: "Direct factory pricing on verified waterproof gear. Fast delivery with doorstep inspection.",
+            badge: "Limited Seasonal Clearance",
+            ctaText: "Claim Clearance Discount",
+            ctaSubtext: "Doorstep inspection before payment",
+            imageUrl: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80"
+          },
+          {
+            id: "sec-mc2",
+            type: "urgency",
+            visible: true,
+            headline: "Limited Stock: Only 19 Packs Remaining in Port Stock",
+            subheadline: "Orders placed today qualify for express priority shipping.",
+            badge: "Final Harbor Allocation"
+          },
+          {
+            id: "sec-mc3",
+            type: "cta",
+            visible: true,
+            headline: "Lock In Clearance Savings Before Stock Depletes",
+            subheadline: "Quick checkout with cash on delivery.",
+            ctaText: "Order at 30% Off"
           }
         ]
       }

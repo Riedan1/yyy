@@ -21,9 +21,19 @@ import {
   HelpCircle, 
   Clock, 
   Sliders,
-  Palette
+  Palette,
+  Layout,
+  Type,
+  Image as ImageIcon,
+  Video,
+  FileText,
+  Truck,
+  Store,
+  ChevronRight,
+  Maximize2
 } from "lucide-react";
 import { GrowthLandingPage, LandingPageSection, SectionType } from "../../types/growthStudio";
+import { ProductInformationCard, ProductCardDisplayMode, ProductCardVisibleFields } from "./ProductInformationCard";
 
 interface LandingPageBuilderProps {
   landingPage: GrowthLandingPage;
@@ -32,94 +42,187 @@ interface LandingPageBuilderProps {
   isArabic?: boolean;
 }
 
-const AVAILABLE_SECTION_TEMPLATES: Array<{
-  type: SectionType;
+// 18 REUSABLE SECTIONS AS SPECIFIED IN PDF & INSTRUCTIONS
+const REUSABLE_SECTION_TYPES: Array<{
+  type: SectionType | string;
   label: string;
-  labelAr: string;
+  description: string;
   defaultHeadline: string;
-  defaultHeadlineAr: string;
   icon: React.ReactNode;
 }> = [
   {
     type: "hero",
     label: "Hero Header",
-    labelAr: "قسم الواجهة الرئيسية (Hero)",
+    description: "High-impact visual headline, key value proposition, and primary action button.",
     defaultHeadline: "Transform Your Everyday Comfort with Ergonomic Footwear",
-    defaultHeadlineAr: "اكتشف الراحة الاستثنائية مع حذاء الصيف المبتكر",
     icon: <ShoppingBag className="w-4 h-4" />
+  },
+  {
+    type: "product",
+    label: "Product Information",
+    description: "Dedicated conversion card with variant selectors, price, stock, and immediate checkout.",
+    defaultHeadline: "Verified Flagship Product Specifications",
+    icon: <Sliders className="w-4 h-4" />
   },
   {
     type: "benefits",
     label: "Key Benefits",
-    labelAr: "الفوائد والمميزات الرئيسية",
-    defaultHeadline: "Why Customers Switched to Our Brand",
-    defaultHeadlineAr: "أهم الفوائد التي تجعل هذا المنتج خيارك الأول",
+    description: "Bullet points or icon cards addressing customer pain points and value gains.",
+    defaultHeadline: "Why Over 12,000 Verified Customers Choose This Model",
     icon: <Layers className="w-4 h-4" />
   },
   {
-    type: "testimonials",
-    label: "Social Proof / Testimonials",
-    labelAr: "شهادات الزبائن الموثقة",
-    defaultHeadline: "Loved by Over 10,000 Satisfied Algerian Buyers",
-    defaultHeadlineAr: "تجارب موثوقة من زبائن حقيقيين في الجزائر",
-    icon: <Star className="w-4 h-4" />
+    type: "features",
+    label: "Feature Cards",
+    description: "Technical highlights and distinctive product components.",
+    defaultHeadline: "Engineered with Unrivaled Craftsmanship",
+    icon: <Sparkles className="w-4 h-4" />
   },
   {
-    type: "urgency",
-    label: "Urgency & Countdown",
-    labelAr: "العرض المؤقت والعداد التنازلي",
-    defaultHeadline: "Special Seasonal Promotion • Limited Daily Quantity",
-    defaultHeadlineAr: "عرض ترويجي محدود • ينتهي قريباً مع نفاد المخزون",
-    icon: <Clock className="w-4 h-4" />
+    type: "specifications",
+    label: "Specifications",
+    description: "Detailed measurements, materials, weight, compatibility, and tech specs.",
+    defaultHeadline: "Technical Specifications & Materials",
+    icon: <FileText className="w-4 h-4" />
+  },
+  {
+    type: "image_text",
+    label: "Image and Text",
+    description: "Side-by-side visual storytelling layout pairing lifestyle photography with copy.",
+    defaultHeadline: "Crafted for Continuous Daily Performance",
+    icon: <ImageIcon className="w-4 h-4" />
+  },
+  {
+    type: "full_width_image",
+    label: "Full-Width Image",
+    description: "Edge-to-edge high-resolution banner image or product showcase.",
+    defaultHeadline: "Experience Next-Level Visual Distinction",
+    icon: <Maximize2 className="w-4 h-4" />
+  },
+  {
+    type: "gallery",
+    label: "Product Gallery",
+    description: "Multi-image grid or carousel highlighting angles, details, and packaging.",
+    defaultHeadline: "Detailed Close-Up & Angle Showcase",
+    icon: <Layout className="w-4 h-4" />
+  },
+  {
+    type: "video",
+    label: "Video Presentation",
+    description: "Embed product demonstration, unboxing, or customer review video.",
+    defaultHeadline: "See the Product in Action (Hands-On Demo)",
+    icon: <Video className="w-4 h-4" />
   },
   {
     type: "comparison",
     label: "Comparison Table",
-    labelAr: "جدول مقارنة صريح",
-    defaultHeadline: "How We Compare to Ordinary Alternatives",
-    defaultHeadlineAr: "مقارنة المنتج بالبدائل العادية في السوق",
+    description: "Side-by-side matrix contrasting your brand against generic market alternatives.",
+    defaultHeadline: "How Our Solution Compares to Market Alternatives",
     icon: <Sliders className="w-4 h-4" />
   },
   {
     type: "faq",
-    label: "FAQ & Clarifications",
-    labelAr: "الأسئلة الشائعة وتفاصيل التوصيل",
-    defaultHeadline: "Frequently Asked Questions",
-    defaultHeadlineAr: "الأسئلة الشائعة حول الشحن والضمان وطريقة الدفع",
+    label: "FAQ Section",
+    description: "Address customer doubts regarding delivery, sizing, returns, and payment.",
+    defaultHeadline: "Frequently Asked Questions & Support",
     icon: <HelpCircle className="w-4 h-4" />
   },
   {
-    type: "guarantee",
-    label: "Trust & COD Guarantee",
-    labelAr: "ضمان الفحص والمعاينة قبل الدفع",
+    type: "shipping",
+    label: "Shipping Information",
+    description: "Express delivery timelines across all 58 Wilayas and courier details.",
+    defaultHeadline: "Doorstep Express Delivery to All 58 Wilayas",
+    icon: <Truck className="w-4 h-4" />
+  },
+  {
+    type: "trust",
+    label: "Trust & Guarantee",
+    description: "Inspect before payment guarantee and hassle-free return policy.",
     defaultHeadline: "100% Risk-Free: Inspect Before You Pay",
-    defaultHeadlineAr: "ضمان ذهبي: عاين طلبك مع عامل التوصيل قبل الدفع",
     icon: <ShieldCheck className="w-4 h-4" />
   },
   {
+    type: "store_info",
+    label: "Store Information",
+    description: "Merchant credentials, store location, verified badge, and contact links.",
+    defaultHeadline: "About Our Verified Yume Store",
+    icon: <Store className="w-4 h-4" />
+  },
+  {
+    type: "custom_text",
+    label: "Custom Text",
+    description: "Freeform rich text or announcement block.",
+    defaultHeadline: "Special Customer Announcement",
+    icon: <Type className="w-4 h-4" />
+  },
+  {
+    type: "custom_image",
+    label: "Custom Image Banner",
+    description: "Custom promotional graphic or certificate visual.",
+    defaultHeadline: "Official Certification & Standards",
+    icon: <ImageIcon className="w-4 h-4" />
+  },
+  {
     type: "cta",
-    label: "Direct Order Form (CTA)",
-    labelAr: "استمارة الطلب المباشر (CTA)",
-    defaultHeadline: "Claim Your Exclusive Package Today",
-    defaultHeadlineAr: "أكد طلبك الآن والدفع عند الاستلام لباب بيتك",
+    label: "Direct Order CTA",
+    description: "High-converting Cash-on-Delivery order form with quick confirmation.",
+    defaultHeadline: "Claim Your Package Today • Cash on Delivery",
     icon: <Check className="w-4 h-4" />
+  },
+  {
+    type: "footer",
+    label: "Footer & Legal",
+    description: "Copyright, privacy notice, terms of delivery, and merchant credentials.",
+    defaultHeadline: "All Rights Reserved • Yume Merchant Platform",
+    icon: <FileText className="w-4 h-4" />
   }
 ];
 
 export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
   landingPage,
   onUpdateLandingPage,
-  onClose,
-  isArabic = false
+  onClose
 }) => {
   const [deviceView, setDeviceView] = useState<"mobile" | "tablet" | "desktop">("mobile");
-  const [activeTab, setActiveTab] = useState<"sections" | "design">("sections");
-  const [editingSectionId, setEditingSectionId] = useState<string | null>(null);
+  const [mobileWorkspaceView, setMobileWorkspaceView] = useState<"sidebar" | "canvas">("sidebar");
+  const [activeSidebarTab, setActiveSidebarTab] = useState<"sections" | "content" | "design" | "product_card">("sections");
+  const [editingSectionId, setEditingSectionId] = useState<string | null>(landingPage.sections[0]?.id || null);
   const [showAddSectionModal, setShowAddSectionModal] = useState(false);
 
-  // Local state for page sections
-  const [sections, setSections] = useState<LandingPageSection[]>(landingPage.sections);
-  const [theme, setTheme] = useState(landingPage.theme);
+  const defaultTheme = {
+    primaryColor: "#0A1F44",
+    accentColor: "#E2A26C",
+    backgroundColor: "#070F1E",
+    backgroundGradient: "linear-gradient(180deg, #070F1E 0%, #0A1F44 45%, #08152B 100%)",
+    cardBackgroundColor: "#0E1C36",
+    textColor: "#F4F6F8",
+    fontFamily: "'Cairo', sans-serif",
+    buttonStyle: "pill" as const,
+    badgeText: "عرض حصري موثوق"
+  };
+
+  // Local state for page sections and theme
+  const [sections, setSections] = useState<LandingPageSection[]>(landingPage.sections || []);
+  const [theme, setTheme] = useState({
+    ...defaultTheme,
+    ...(landingPage.theme || {})
+  });
+
+  // Product card settings state (PDF Page 6)
+  const [productCardMode, setProductCardMode] = useState<ProductCardDisplayMode>("standard");
+
+  const isArabicPage = landingPage.language === "ar" || (landingPage.theme?.fontFamily?.includes("Tajawal") ?? false) || (landingPage.theme?.fontFamily?.includes("Cairo") ?? false);
+
+  const activeSection = sections.find((s) => s.id === editingSectionId) || sections[0];
+
+  const syncChanges = (newSections: LandingPageSection[], newTheme = theme) => {
+    setSections(newSections);
+    onUpdateLandingPage({
+      ...landingPage,
+      sections: newSections,
+      theme: newTheme
+    });
+  };
 
   // Reorder sections
   const moveSection = (index: number, direction: "up" | "down") => {
@@ -131,23 +234,13 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
     updated[index] = updated[targetIndex];
     updated[targetIndex] = temp;
 
-    setSections(updated);
-    onUpdateLandingPage({
-      ...landingPage,
-      sections: updated,
-      theme
-    });
+    syncChanges(updated);
   };
 
   // Toggle visibility
   const toggleVisibility = (id: string) => {
     const updated = sections.map((s) => (s.id === id ? { ...s, visible: !s.visible } : s));
-    setSections(updated);
-    onUpdateLandingPage({
-      ...landingPage,
-      sections: updated,
-      theme
-    });
+    syncChanges(updated);
   };
 
   // Duplicate section
@@ -160,70 +253,50 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
     };
 
     const updated = [...sections.slice(0, index + 1), duplicated, ...sections.slice(index + 1)];
-    setSections(updated);
-    onUpdateLandingPage({
-      ...landingPage,
-      sections: updated,
-      theme
-    });
+    syncChanges(updated);
   };
 
   // Delete section
   const deleteSection = (id: string) => {
     const updated = sections.filter((s) => s.id !== id);
-    setSections(updated);
-    onUpdateLandingPage({
-      ...landingPage,
-      sections: updated,
-      theme
-    });
+    syncChanges(updated);
+    if (editingSectionId === id) {
+      setEditingSectionId(updated[0]?.id || null);
+    }
   };
 
   // Add new section
-  const handleAddSection = (template: typeof AVAILABLE_SECTION_TEMPLATES[0]) => {
+  const handleAddSection = (template: typeof REUSABLE_SECTION_TYPES[0]) => {
     const newSection: LandingPageSection = {
       id: `sec-${Date.now()}`,
-      type: template.type,
+      type: template.type as SectionType,
       visible: true,
-      headline: isArabic ? template.defaultHeadlineAr : template.defaultHeadline,
-      subheadline: isArabic ? "وصف توضيحي إضافي لتعزيز ثقة الزائر ومعدل التحويل." : "Detailed compelling message designed to build visitor trust.",
-      ctaText: isArabic ? "اطلب الآن والدفع عند الاستلام" : "Order Now - Pay on Delivery",
+      headline: template.defaultHeadline,
+      subheadline: "Compelling descriptive message engineered to maximize consumer confidence and purchase conversion.",
+      ctaText: "Order Now - Cash on Delivery",
       items: [
-        { title: isArabic ? "ميزة فائقة 01" : "Feature One", description: isArabic ? "شرح مبسط ومقنع للقيمة المضافة." : "Clear benefit addressing a core customer pain point." },
-        { title: isArabic ? "ميزة فائقة 02" : "Feature Two", description: isArabic ? "تفاصيل إضافية تضمن راحة العميل." : "High quality guarantee with frictionless support." }
+        { title: "Primary Feature / Advantage", description: "Clear factual benefit addressing the customer's top expectation." },
+        { title: "Quality Guarantee", description: "Doorstep inspection and hassle-free courier delivery across 58 Wilayas." }
       ]
     };
 
     const updated = [...sections, newSection];
-    setSections(updated);
-    onUpdateLandingPage({
-      ...landingPage,
-      sections: updated,
-      theme
-    });
+    syncChanges(updated);
+    setEditingSectionId(newSection.id);
     setShowAddSectionModal(false);
   };
 
   // Update specific section content
-  const handleUpdateSectionContent = (id: string, updates: Partial<LandingPageSection>) => {
+  const handleUpdateSection = (id: string, updates: Partial<LandingPageSection>) => {
     const updated = sections.map((s) => (s.id === id ? { ...s, ...updates } : s));
-    setSections(updated);
-    onUpdateLandingPage({
-      ...landingPage,
-      sections: updated,
-      theme
-    });
+    syncChanges(updated);
   };
 
-  // Update theme
-  const handleThemeColorChange = (key: keyof typeof theme, val: string) => {
-    const updatedTheme = { ...theme, [key]: val };
+  // Update theme settings
+  const handleThemeChange = (key: keyof typeof theme, value: any) => {
+    const updatedTheme = { ...theme, [key]: value };
     setTheme(updatedTheme);
-    onUpdateLandingPage({
-      ...landingPage,
-      sections,
-      theme: updatedTheme
-    });
+    syncChanges(sections, updatedTheme);
   };
 
   return (
@@ -233,14 +306,14 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <span className="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-mono text-xs font-bold">
-              Builder
+              Visual Editor
             </span>
-            <h2 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+            <h2 className="text-sm sm:text-base font-black text-slate-900 dark:text-white truncate max-w-xs sm:max-w-md">
               {landingPage.name}
             </h2>
           </div>
           <span className="hidden sm:inline-block text-xs text-slate-400 font-mono">
-            ({sections.length} {isArabic ? "أقسام نشطة" : "sections"})
+            ({sections.length} active sections)
           </span>
         </div>
 
@@ -249,7 +322,7 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
           <button
             type="button"
             onClick={() => setDeviceView("mobile")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               deviceView === "mobile"
                 ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs"
                 : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
@@ -262,7 +335,7 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
           <button
             type="button"
             onClick={() => setDeviceView("tablet")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               deviceView === "tablet"
                 ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs"
                 : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
@@ -274,7 +347,7 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
           <button
             type="button"
             onClick={() => setDeviceView("desktop")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               deviceView === "desktop"
                 ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs"
                 : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
@@ -285,57 +358,109 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
           </button>
         </div>
 
-        {/* Right Actions */}
+        {/* Mobile View Switcher (Controls vs Canvas) */}
+        <div className="flex md:hidden items-center p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200/80 dark:border-slate-700">
+          <button
+            type="button"
+            onClick={() => setMobileWorkspaceView("sidebar")}
+            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+              mobileWorkspaceView === "sidebar"
+                ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+            }`}
+          >
+            Controls
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileWorkspaceView("canvas")}
+            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+              mobileWorkspaceView === "canvas"
+                ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+            }`}
+          >
+            Preview
+          </button>
+        </div>
+
+        {/* Right Actions: Save & Exit */}
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
+            className="px-3 sm:px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black shadow-xs transition-all cursor-pointer flex items-center gap-1.5"
           >
-            <Check className="w-4 h-4 text-emerald-500" />
-            <span>{isArabic ? "حفظ وإغلاق" : "Save & Exit"}</span>
+            <Check className="w-4 h-4" />
+            <span>Save & Exit</span>
           </button>
         </div>
       </header>
 
       {/* Main Workspace: Left Controls Sidebar + Center Canvas */}
       <div className="flex-1 flex overflow-hidden">
-
-        {/* Left Drawer / Panel: Sections list & reordering */}
-        <aside className="w-80 sm:w-96 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0 overflow-y-auto">
-          {/* Tabs: Sections vs Design */}
-          <div className="p-3 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
+        
+        {/* Left Controls Sidebar */}
+        <aside className={`${mobileWorkspaceView === "sidebar" ? "flex" : "hidden"} md:flex w-full md:w-80 lg:w-96 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-col shrink-0 overflow-y-auto`}>
+          
+          {/* Subtabs Bar */}
+          <div className="p-2 border-b border-slate-200 dark:border-slate-800 grid grid-cols-4 gap-1">
             <button
               type="button"
-              onClick={() => setActiveTab("sections")}
-              className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                activeTab === "sections"
+              onClick={() => setActiveSidebarTab("sections")}
+              className={`py-2 text-[11px] font-bold rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
+                activeSidebarTab === "sections"
                   ? "bg-indigo-50 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800"
                   : "text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
-              <span>{isArabic ? "الأقسام والترتيب" : "Sections Order"}</span>
+              <span>Sections</span>
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab("design")}
-              className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                activeTab === "design"
+              onClick={() => setActiveSidebarTab("content")}
+              className={`py-2 text-[11px] font-bold rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
+                activeSidebarTab === "content"
+                  ? "bg-indigo-50 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800"
+                  : "text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"
+              }`}
+            >
+              <Edit3 className="w-3.5 h-3.5" />
+              <span>Content</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveSidebarTab("design")}
+              className={`py-2 text-[11px] font-bold rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
+                activeSidebarTab === "design"
                   ? "bg-indigo-50 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800"
                   : "text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"
               }`}
             >
               <Palette className="w-3.5 h-3.5" />
-              <span>{isArabic ? "الهوية والألوان" : "Theme & Styles"}</span>
+              <span>Design</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveSidebarTab("product_card")}
+              className={`py-2 text-[11px] font-bold rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
+                activeSidebarTab === "product_card"
+                  ? "bg-indigo-50 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800"
+                  : "text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"
+              }`}
+            >
+              <Sliders className="w-3.5 h-3.5" />
+              <span>Product Card</span>
             </button>
           </div>
 
-          {activeTab === "sections" ? (
-            <div className="p-4 space-y-3 flex-1">
+          {/* TAB 1: SECTIONS LIST & REORDERING */}
+          {activeSidebarTab === "sections" && (
+            <div className="p-4 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                  {isArabic ? "أقسام الصفحة الحالية" : "Page Sections"}
+                  Page Sections ({sections.length})
                 </span>
                 <button
                   type="button"
@@ -343,29 +468,37 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
                   className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
                 >
                   <Plus className="w-3.5 h-3.5" />
-                  <span>{isArabic ? "إضافة قسم" : "Add Section"}</span>
+                  <span>Add Section</span>
                 </button>
               </div>
 
-              {/* Sections list */}
               <div className="space-y-2">
-                {sections.map((section, idx) => (
+                {sections.map((sec, idx) => (
                   <div
-                    key={section.id}
+                    key={sec.id}
                     className={`p-3 rounded-2xl border transition-all ${
-                      editingSectionId === section.id
+                      editingSectionId === sec.id
                         ? "border-indigo-500 bg-indigo-50/40 dark:bg-indigo-950/30"
                         : "border-slate-200/80 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-850/60"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 min-w-0">
+                      <div 
+                        className="flex items-center gap-2 min-w-0 cursor-pointer"
+                        onClick={() => {
+                          setEditingSectionId(sec.id);
+                          setActiveSidebarTab("content");
+                        }}
+                      >
                         <span className="w-5 h-5 rounded-md bg-white dark:bg-slate-800 text-slate-500 font-mono text-[10px] font-bold flex items-center justify-center border border-slate-200 dark:border-slate-700 shrink-0">
                           {idx + 1}
                         </span>
                         <div className="truncate">
                           <span className="text-xs font-bold text-slate-900 dark:text-white capitalize block truncate">
-                            {section.type} • {section.headline}
+                            {sec.type.replace("_", " ")}
+                          </span>
+                          <span className="text-[10px] text-slate-400 truncate block">
+                            {sec.headline}
                           </span>
                         </div>
                       </div>
@@ -376,8 +509,8 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
                           type="button"
                           onClick={() => moveSection(idx, "up")}
                           disabled={idx === 0}
-                          className="p-1 rounded text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
-                          title="Move up"
+                          className="p-1 rounded text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-20 cursor-pointer"
+                          title="Move Up"
                         >
                           <ArrowUp className="w-3.5 h-3.5" />
                         </button>
@@ -385,182 +518,312 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
                           type="button"
                           onClick={() => moveSection(idx, "down")}
                           disabled={idx === sections.length - 1}
-                          className="p-1 rounded text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
-                          title="Move down"
+                          className="p-1 rounded text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-20 cursor-pointer"
+                          title="Move Down"
                         >
                           <ArrowDown className="w-3.5 h-3.5" />
                         </button>
                         <button
                           type="button"
-                          onClick={() => setEditingSectionId(editingSectionId === section.id ? null : section.id)}
-                          className="p-1 rounded text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 cursor-pointer"
-                          title="Edit section"
+                          onClick={() => toggleVisibility(sec.id)}
+                          className={`p-1 rounded cursor-pointer ${
+                            sec.visible ? "text-emerald-500" : "text-slate-300 dark:text-slate-600"
+                          }`}
+                          title={sec.visible ? "Hide Section" : "Show Section"}
                         >
-                          <Edit3 className="w-3.5 h-3.5" />
+                          {sec.visible ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                         </button>
                         <button
                           type="button"
                           onClick={() => duplicateSection(idx)}
-                          className="p-1 rounded text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer"
-                          title="Duplicate"
+                          className="p-1 rounded text-slate-400 hover:text-slate-700 cursor-pointer"
+                          title="Duplicate Section"
                         >
                           <Copy className="w-3.5 h-3.5" />
                         </button>
                         <button
                           type="button"
-                          onClick={() => deleteSection(section.id)}
-                          className="p-1 rounded text-rose-500 hover:text-rose-700 cursor-pointer"
-                          title="Delete"
+                          onClick={() => deleteSection(sec.id)}
+                          className="p-1 rounded text-rose-400 hover:text-rose-600 cursor-pointer"
+                          title="Delete Section"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
-
-                    {/* Inline Editor if expanded */}
-                    {editingSectionId === section.id && (
-                      <div className="mt-3 pt-3 border-t border-slate-200/80 dark:border-slate-800 space-y-2.5">
-                        <div>
-                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                            {isArabic ? "العنوان الرئيسي (Headline)" : "Headline"}
-                          </label>
-                          <input
-                            type="text"
-                            value={section.headline}
-                            onChange={(e) => handleUpdateSectionContent(section.id, { headline: e.target.value })}
-                            className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                            {isArabic ? "العنوان الفرعي (Subheadline)" : "Subheadline"}
-                          </label>
-                          <textarea
-                            rows={2}
-                            value={section.subheadline || ""}
-                            onChange={(e) => handleUpdateSectionContent(section.id, { subheadline: e.target.value })}
-                            className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                          />
-                        </div>
-
-                        {section.type === "hero" || section.type === "cta" ? (
-                          <div>
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                              {isArabic ? "نص زر الطلب (CTA Button)" : "CTA Button Label"}
-                            </label>
-                            <input
-                              type="text"
-                              value={section.ctaText || ""}
-                              onChange={(e) => handleUpdateSectionContent(section.id, { ctaText: e.target.value })}
-                              className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                            />
-                          </div>
-                        ) : null}
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
             </div>
-          ) : (
+          )}
+
+          {/* TAB 2: DETAILED CONTENT EDITING */}
+          {activeSidebarTab === "content" && activeSection && (
             <div className="p-4 space-y-4">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
-                {isArabic ? "تخصيص الهوية البصرية" : "Visual Identity & Palette"}
-              </span>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  Editing: {activeSection.type.replace("_", " ")}
+                </span>
+                <span className="text-[10px] font-mono text-slate-400">
+                  ID: {activeSection.id}
+                </span>
+              </div>
 
-              <div className="space-y-3">
+              {/* Headline */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  Section Headline
+                </label>
+                <input
+                  type="text"
+                  value={activeSection.headline}
+                  onChange={(e) => handleUpdateSection(activeSection.id, { headline: e.target.value })}
+                  className="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+                />
+              </div>
+
+              {/* Subheadline */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  Subheadline / Body Message
+                </label>
+                <textarea
+                  rows={3}
+                  value={activeSection.subheadline || ""}
+                  onChange={(e) => handleUpdateSection(activeSection.id, { subheadline: e.target.value })}
+                  className="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white leading-relaxed"
+                />
+              </div>
+
+              {/* Badge text */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  Badge / Eyebrow Text (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={activeSection.badge || ""}
+                  onChange={(e) => handleUpdateSection(activeSection.id, { badge: e.target.value })}
+                  placeholder="e.g. Exclusive Launch Drop"
+                  className="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+                />
+              </div>
+
+              {/* Image URL */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  Image URL
+                </label>
+                <input
+                  type="text"
+                  value={activeSection.imageUrl || ""}
+                  onChange={(e) => handleUpdateSection(activeSection.id, { imageUrl: e.target.value })}
+                  placeholder="https://..."
+                  className="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-mono"
+                />
+              </div>
+
+              {/* CTA Button Text */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  CTA Button Label
+                </label>
+                <input
+                  type="text"
+                  value={activeSection.ctaText || ""}
+                  onChange={(e) => handleUpdateSection(activeSection.id, { ctaText: e.target.value })}
+                  placeholder="Order Now - Cash on Delivery"
+                  className="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+                />
+              </div>
+
+              {/* CTA Subtext */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  CTA Subtext / Reassurance
+                </label>
+                <input
+                  type="text"
+                  value={activeSection.ctaSubtext || ""}
+                  onChange={(e) => handleUpdateSection(activeSection.id, { ctaSubtext: e.target.value })}
+                  placeholder="Inspect package upon courier delivery"
+                  className="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+                />
+              </div>
+
+              {/* Price fields */}
+              <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1.5">
-                    {isArabic ? "اللون الرئيسي (Primary Brand Color)" : "Primary Brand Color"}
+                  <label className="text-[11px] font-bold text-slate-500 block mb-1">
+                    Price (DA)
                   </label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="color"
-                      value={theme.primaryColor}
-                      onChange={(e) => handleThemeColorChange("primaryColor", e.target.value)}
-                      className="w-9 h-9 rounded-lg cursor-pointer border border-slate-300 dark:border-slate-700 p-0.5"
-                    />
-                    <input
-                      type="text"
-                      value={theme.primaryColor}
-                      onChange={(e) => handleThemeColorChange("primaryColor", e.target.value)}
-                      className="text-xs font-mono font-bold px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                    />
-                  </div>
+                  <input
+                    type="number"
+                    value={activeSection.price || ""}
+                    onChange={(e) => handleUpdateSection(activeSection.id, { price: Number(e.target.value) })}
+                    className="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-mono"
+                  />
                 </div>
-
                 <div>
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1.5">
-                    {isArabic ? "اللون الثانوي المميز (Accent Color)" : "Accent Color"}
+                  <label className="text-[11px] font-bold text-slate-500 block mb-1">
+                    Strike Price (DA)
                   </label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="color"
-                      value={theme.accentColor}
-                      onChange={(e) => handleThemeColorChange("accentColor", e.target.value)}
-                      className="w-9 h-9 rounded-lg cursor-pointer border border-slate-300 dark:border-slate-700 p-0.5"
-                    />
-                    <input
-                      type="text"
-                      value={theme.accentColor}
-                      onChange={(e) => handleThemeColorChange("accentColor", e.target.value)}
-                      className="text-xs font-mono font-bold px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1.5">
-                    {isArabic ? "شكل الأزرار (Button Shape)" : "Button Style"}
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {(["pill", "rounded", "sharp"] as const).map((style) => (
-                      <button
-                        key={style}
-                        type="button"
-                        onClick={() => handleThemeColorChange("buttonStyle", style)}
-                        className={`py-2 text-xs font-bold border transition-all cursor-pointer capitalize ${
-                          theme.buttonStyle === style
-                            ? "border-indigo-600 bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300"
-                            : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
-                        } ${style === "pill" ? "rounded-full" : style === "rounded" ? "rounded-xl" : "rounded-none"}`}
-                      >
-                        {style}
-                      </button>
-                    ))}
-                  </div>
+                  <input
+                    type="number"
+                    value={activeSection.originalPrice || ""}
+                    onChange={(e) => handleUpdateSection(activeSection.id, { originalPrice: Number(e.target.value) })}
+                    className="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-mono"
+                  />
                 </div>
               </div>
             </div>
           )}
+
+          {/* TAB 3: DESIGN & PALETTE CONTROLS */}
+          {activeSidebarTab === "design" && (
+            <div className="p-4 space-y-4">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                Visual Identity & Styles
+              </span>
+
+              {/* Primary Color */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
+                  Primary Color (Brand Accent)
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={theme.primaryColor}
+                    onChange={(e) => handleThemeChange("primaryColor", e.target.value)}
+                    className="w-9 h-9 rounded-xl border border-slate-300 dark:border-slate-700 cursor-pointer p-0.5"
+                  />
+                  <input
+                    type="text"
+                    value={theme.primaryColor}
+                    onChange={(e) => handleThemeChange("primaryColor", e.target.value)}
+                    className="text-xs font-mono font-bold px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+                  />
+                </div>
+              </div>
+
+              {/* Accent Color */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
+                  Secondary Accent Color
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={theme.accentColor}
+                    onChange={(e) => handleThemeChange("accentColor", e.target.value)}
+                    className="w-9 h-9 rounded-xl border border-slate-300 dark:border-slate-700 cursor-pointer p-0.5"
+                  />
+                  <input
+                    type="text"
+                    value={theme.accentColor}
+                    onChange={(e) => handleThemeChange("accentColor", e.target.value)}
+                    className="text-xs font-mono font-bold px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+                  />
+                </div>
+              </div>
+
+              {/* Button Shape */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
+                  Button Style & Radius
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(["pill", "rounded", "sharp"] as const).map((style) => (
+                    <button
+                      key={style}
+                      type="button"
+                      onClick={() => handleThemeChange("buttonStyle", style)}
+                      className={`py-2 text-xs font-bold border transition-all cursor-pointer capitalize ${
+                        theme.buttonStyle === style
+                          ? "border-indigo-600 bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300"
+                          : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
+                      } ${style === "pill" ? "rounded-full" : style === "rounded" ? "rounded-xl" : "rounded-none"}`}
+                    >
+                      {style}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: PRODUCT CARD DISPLAY MODES */}
+          {activeSidebarTab === "product_card" && (
+            <div className="p-4 space-y-4">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                Product Card Display Modes (PDF Page 6)
+              </span>
+
+              <div className="space-y-2">
+                {[
+                  { id: "standard", label: "Standard Card", desc: "Balanced layout with media, variants, and purchase actions." },
+                  { id: "compact", label: "Compact Card", desc: "Dense, low-height card ideal for high-speed impulse buying." },
+                  { id: "detailed", label: "Detailed Card", desc: "Expanded specifications, logistics, and store credentials." },
+                  { id: "sticky", label: "Sticky Purchase Card", desc: "Fixed floating bar pinned to the screen bottom during scroll." },
+                  { id: "mobile_bottom", label: "Mobile Bottom Bar", desc: "High-yield thumb-zone checkout trigger on mobile devices." }
+                ].map((mode) => (
+                  <div
+                    key={mode.id}
+                    onClick={() => setProductCardMode(mode.id as any)}
+                    className={`p-3 rounded-2xl border transition-all cursor-pointer ${
+                      productCardMode === mode.id
+                        ? "border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/40 shadow-xs"
+                        : "border-slate-200 dark:border-slate-800 hover:border-slate-300"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-slate-900 dark:text-white">
+                        {mode.label}
+                      </span>
+                      {productCardMode === mode.id && (
+                        <Check className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                      )}
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                      {mode.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
         </aside>
 
         {/* Center Live Canvas Preview */}
-        <main className="flex-1 bg-slate-200/60 dark:bg-slate-950 p-4 sm:p-8 flex items-center justify-center overflow-y-auto">
+        <main className={`${mobileWorkspaceView === "canvas" ? "flex" : "hidden"} md:flex flex-1 bg-slate-100 dark:bg-slate-950 p-2 sm:p-4 md:p-8 items-center justify-center overflow-y-auto`}>
           {/* Device Frame */}
           <div
-            className={`transition-all duration-300 bg-white text-slate-900 shadow-2xl overflow-y-auto relative ${
+            className={`transition-all duration-300 bg-white text-slate-900 shadow-2xl overflow-y-auto relative w-full ${
               deviceView === "mobile"
-                ? "w-[390px] h-[780px] rounded-[48px] border-[10px] border-slate-800 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)]"
+                ? "max-w-[390px] h-[780px] rounded-[36px] sm:rounded-[48px] border-[6px] sm:border-[10px] border-slate-800 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)]"
                 : deviceView === "tablet"
-                ? "w-[720px] h-[850px] rounded-[36px] border-[12px] border-slate-800 shadow-2xl"
-                : "w-full max-w-5xl h-[850px] rounded-2xl border border-slate-300 dark:border-slate-800 shadow-2xl"
+                ? "max-w-[720px] h-[850px] rounded-[28px] sm:rounded-[36px] border-[8px] sm:border-[12px] border-slate-800 shadow-2xl"
+                : "max-w-5xl h-[850px] rounded-2xl border border-slate-300 dark:border-slate-800 shadow-2xl"
             }`}
           >
-            {/* Mobile Dynamic Island / Notch */}
+            {/* Dynamic Island on Mobile */}
             {deviceView === "mobile" && (
               <div className="sticky top-0 z-40 w-full flex justify-center pt-2 pb-1 bg-white">
                 <div className="w-24 h-4 bg-black rounded-full" />
               </div>
             )}
 
-            {/* Rendered Landing Page Sections Inside the Frame */}
-            <div className="p-4 sm:p-6 space-y-8 font-sans">
+            {/* Rendered Landing Page Sections Inside Canvas */}
+            <div 
+              dir={isArabicPage ? "rtl" : "ltr"}
+              className="p-4 sm:p-6 space-y-8 font-sans"
+            >
               {sections.filter((s) => s.visible).map((section) => (
                 <div key={section.id} className="space-y-4">
 
-                  {/* HERO SECTION */}
+                  {/* 1. HERO */}
                   {section.type === "hero" && (
                     <div className="text-center space-y-4 pt-2">
                       {section.badge && (
@@ -579,8 +842,6 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
                           {section.subheadline}
                         </p>
                       )}
-
-                      {/* Hero Image */}
                       {section.imageUrl && (
                         <div className="rounded-2xl overflow-hidden shadow-md max-w-sm mx-auto aspect-4/3 bg-slate-100">
                           <img 
@@ -591,7 +852,6 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
                           />
                         </div>
                       )}
-
                       <div className="pt-2">
                         <button
                           type="button"
@@ -600,18 +860,36 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
                             theme.buttonStyle === "pill" ? "rounded-full" : theme.buttonStyle === "rounded" ? "rounded-xl" : "rounded-none"
                           }`}
                         >
-                          {section.ctaText || "اطلب الآن والدفع عند الاستلام"}
+                          {section.ctaText || "Order Now - Cash on Delivery"}
                         </button>
-                        {section.ctaSubtext && (
-                          <span className="text-[11px] text-slate-500 block mt-1.5 font-medium">
-                            {section.ctaSubtext}
-                          </span>
-                        )}
                       </div>
                     </div>
                   )}
 
-                  {/* BENEFITS SECTION */}
+                  {/* 2. PRODUCT INFORMATION CARD (PDF Page 6 Component) */}
+                  {section.type === "product" && (
+                    <ProductInformationCard
+                      product={{
+                        id: "prod-demo",
+                        name: section.headline,
+                        price: section.price || 4900,
+                        originalPrice: section.originalPrice || 6800,
+                        imageUrl: section.imageUrl || "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80",
+                        description: section.subheadline,
+                        colors: [
+                          { name: "Black", hex: "#0f172a" },
+                          { name: "Silver", hex: "#64748b" }
+                        ],
+                        sizes: ["39", "40", "41", "42", "43"]
+                      }}
+                      mode={productCardMode}
+                      primaryColor={theme.primaryColor}
+                      accentColor={theme.accentColor}
+                      buttonStyle={theme.buttonStyle}
+                    />
+                  )}
+
+                  {/* 3. BENEFITS */}
                   {section.type === "benefits" && (
                     <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
                       <div className="text-center space-y-1">
@@ -642,53 +920,58 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
                     </div>
                   )}
 
-                  {/* TESTIMONIALS / REVIEWS */}
-                  {(section.type === "testimonials" || section.type === "reviews") && (
-                    <div className="space-y-3">
-                      <div className="text-center">
-                        <h3 className="text-sm sm:text-base font-black text-slate-900">
-                          {section.headline}
-                        </h3>
-                        {section.subheadline && (
-                          <p className="text-xs text-slate-500">{section.subheadline}</p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2.5">
-                        {(section.items || []).map((item, i) => (
-                          <div key={i} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
-                            <div className="flex items-center justify-between">
-                              <span className="text-xs font-bold text-slate-900">{item.title}</span>
-                              <div className="flex items-center text-amber-500 text-xs">
-                                {"★".repeat(item.rating || 5)}
-                              </div>
-                            </div>
-                            <p className="text-xs text-slate-600 leading-relaxed font-normal">
-                              "{item.description}"
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* URGENCY / FLASH OFFER */}
-                  {section.type === "urgency" && (
-                    <div 
-                      className="p-4 rounded-2xl text-center space-y-2 text-white"
-                      style={{ backgroundColor: theme.primaryColor }}
-                    >
-                      <span className="text-[10px] font-mono font-bold tracking-widest uppercase bg-white/20 px-2 py-0.5 rounded-full">
-                        {section.badge || "عرض محدود"}
-                      </span>
-                      <h3 className="text-sm sm:text-base font-black">
+                  {/* 4. COMPARISON */}
+                  {section.type === "comparison" && (
+                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+                      <h3 className="text-sm sm:text-base font-black text-slate-900 text-center">
                         {section.headline}
                       </h3>
-                      <p className="text-xs text-white/80">{section.subheadline}</p>
+                      <div className="overflow-x-auto text-xs">
+                        <table className="w-full text-left border-collapse">
+                          <thead>
+                            <tr className="border-b border-slate-200">
+                              <th className="py-2 text-slate-400 font-bold">Feature</th>
+                              <th className="py-2 font-bold text-indigo-600">Our Brand</th>
+                              <th className="py-2 text-slate-400 font-bold">Generic Alternatives</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-200">
+                            <tr>
+                              <td className="py-2 font-bold">Doorstep Inspection</td>
+                              <td className="py-2 text-emerald-600 font-bold">✓ Included</td>
+                              <td className="py-2 text-rose-500 font-bold">✗ No Check</td>
+                            </tr>
+                            <tr>
+                              <td className="py-2 font-bold">58 Wilayas COD</td>
+                              <td className="py-2 text-emerald-600 font-bold">✓ Fast Dispatch</td>
+                              <td className="py-2 text-slate-400">Delayed</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   )}
 
-                  {/* DIRECT COD CTA FORM */}
+                  {/* 5. FAQ */}
+                  {section.type === "faq" && (
+                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+                      <h3 className="text-sm sm:text-base font-black text-slate-900 text-center">
+                        {section.headline}
+                      </h3>
+                      <div className="space-y-2">
+                        <div className="p-3 bg-white rounded-xl border border-slate-200 text-xs space-y-1">
+                          <span className="font-bold block">Can I inspect the parcel before paying?</span>
+                          <span className="text-slate-500 block">Yes, our delivery courier allows you to verify your items before paying in cash.</span>
+                        </div>
+                        <div className="p-3 bg-white rounded-xl border border-slate-200 text-xs space-y-1">
+                          <span className="font-bold block">How long does shipping take?</span>
+                          <span className="text-slate-500 block">Algiers & major urban hubs receive delivery in 24 hours. Other wilayas in 48 hours.</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 6. DIRECT COD CTA */}
                   {section.type === "cta" && (
                     <div className="p-5 rounded-2xl bg-indigo-50/50 border border-indigo-200/70 space-y-3 text-center">
                       <h3 className="text-sm sm:text-base font-black text-slate-900">
@@ -700,20 +983,20 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
                         <input
                           type="text"
                           disabled
-                          placeholder="الاسم الكامل"
+                          placeholder="Full Name (Nom complet)"
                           className="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white"
                         />
                         <input
                           type="text"
                           disabled
-                          placeholder="رقم الهاتف (05 / 06 / 07)"
+                          placeholder="Phone Number (05 / 06 / 07)"
                           className="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white"
                         />
                         <select
                           disabled
                           className="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white"
                         >
-                          <option>اختر الولاية (16 - الجزائر، 31 - وهران...)</option>
+                          <option>Select Wilaya (16 - Alger, 31 - Oran, etc.)</option>
                         </select>
                         <button
                           type="button"
@@ -722,9 +1005,31 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
                             theme.buttonStyle === "pill" ? "rounded-full" : theme.buttonStyle === "rounded" ? "rounded-xl" : "rounded-none"
                           }`}
                         >
-                          {section.ctaText || "تأكيد الطلب والدفع عند الاستلام"}
+                          {section.ctaText || "Confirm Order - Pay upon Delivery"}
                         </button>
                       </div>
+                    </div>
+                  )}
+
+                  {/* 7. OTHER SECTIONS (GENERIC FALLBACK DISPLAY) */}
+                  {section.type !== "hero" && section.type !== "product" && section.type !== "benefits" && section.type !== "comparison" && section.type !== "faq" && section.type !== "cta" && (
+                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className="p-1.5 rounded-lg bg-indigo-50 text-indigo-600 font-bold text-xs uppercase">
+                          {section.type.replace("_", " ")}
+                        </span>
+                        <h4 className="text-sm font-bold text-slate-900">{section.headline}</h4>
+                      </div>
+                      {section.subheadline && (
+                        <p className="text-xs text-slate-600 leading-relaxed">{section.subheadline}</p>
+                      )}
+                      {section.imageUrl && (
+                        <img 
+                          src={section.imageUrl} 
+                          alt={section.headline}
+                          className="rounded-xl w-full max-h-48 object-cover border border-slate-200 mt-2"
+                        />
+                      )}
                     </div>
                   )}
 
@@ -735,53 +1040,53 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
         </main>
       </div>
 
-      {/* Add Section Modal */}
+      {/* Add Section Modal with 18 Reusable Sections */}
       {showAddSectionModal && (
         <div className="fixed inset-0 z-60 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-2xl space-y-5 text-left">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-2xl space-y-5 text-left max-h-[85vh] flex flex-col">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-base font-black text-slate-900 dark:text-white">
-                  {isArabic ? "إضافة قسم جديد إلى صفحة الهبوط" : "Add Landing Page Section"}
+                  Add Landing Page Section
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  {isArabic ? "اختر نوع القسم الجاهز لتخصيص محتواه فوراً." : "Select a pre-designed conversion section to insert."}
+                  Select from 18 conversion-tested section blocks.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowAddSectionModal(false)}
-                className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-96 overflow-y-auto">
-              {AVAILABLE_SECTION_TEMPLATES.map((tmpl) => (
-                <button
-                  key={tmpl.type}
-                  type="button"
-                  onClick={() => handleAddSection(tmpl)}
-                  className="p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-500 bg-slate-50/70 dark:bg-slate-850/60 hover:bg-white dark:hover:bg-slate-800 text-left transition-all cursor-pointer flex items-start gap-3 group"
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto pr-1 flex-1">
+              {REUSABLE_SECTION_TYPES.map((template) => (
+                <div
+                  key={template.type}
+                  onClick={() => handleAddSection(template)}
+                  className="p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-500 bg-slate-50/50 dark:bg-slate-850/50 hover:bg-indigo-50/20 dark:hover:bg-indigo-950/20 transition-all cursor-pointer flex items-start gap-3"
                 >
-                  <div className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-colors shrink-0">
-                    {tmpl.icon}
+                  <div className="p-2 rounded-xl bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 border border-slate-200 dark:border-slate-700 shrink-0">
+                    {template.icon}
                   </div>
-                  <div className="space-y-0.5 min-w-0">
-                    <span className="text-xs font-bold text-slate-900 dark:text-white block truncate">
-                      {isArabic ? tmpl.labelAr : tmpl.label}
-                    </span>
-                    <span className="text-[10px] text-slate-400 line-clamp-2">
-                      {isArabic ? tmpl.defaultHeadlineAr : tmpl.defaultHeadline}
-                    </span>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                      {template.label}
+                    </h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5">
+                      {template.description}
+                    </p>
                   </div>
-                </button>
+                </div>
               ))}
             </div>
           </div>
         </div>
       )}
+
     </div>
   );
 };

@@ -32,8 +32,12 @@ export type StrategyFocus =
 
 export type SectionType =
   | "hero"
+  | "problem"
+  | "solution"
   | "product"
   | "benefits"
+  | "how_it_works"
+  | "why_choose"
   | "features"
   | "testimonials"
   | "reviews"
@@ -42,11 +46,21 @@ export type SectionType =
   | "guarantee"
   | "cta"
   | "urgency"
-  | "footer";
+  | "footer"
+  | "specifications"
+  | "image_text"
+  | "full_width_image"
+  | "gallery"
+  | "video"
+  | "shipping"
+  | "trust"
+  | "store_info"
+  | "custom_text"
+  | "custom_image";
 
 export interface LandingPageSection {
   id: string;
-  type: SectionType;
+  type: SectionType | string;
   visible: boolean;
   headline: string;
   subheadline?: string;
@@ -55,6 +69,12 @@ export interface LandingPageSection {
   videoUrl?: string;
   ctaText?: string;
   ctaSubtext?: string;
+  price?: number;
+  originalPrice?: number;
+  backgroundColor?: string;
+  textColor?: string;
+  backgroundImageUrl?: string;
+  overlayOpacity?: number;
   items?: Array<{
     title: string;
     description: string;
@@ -76,6 +96,10 @@ export interface GrowthLandingPage {
   strategyFocus: StrategyFocus;
   trafficAllocation: number; // e.g. 40 (meaning 40%)
   suggestedAllocation?: number;
+  language?: string;
+  currency?: string;
+  market?: string;
+  instructions?: string;
   theme: {
     primaryColor: string;
     accentColor: string;
@@ -83,6 +107,16 @@ export interface GrowthLandingPage {
     fontFamily: string;
     buttonStyle: "pill" | "rounded" | "sharp";
     badgeText?: string;
+    secondaryColor?: string;
+    cardBackgroundColor?: string;
+    textColor?: string;
+    backgroundStyle?: "solid" | "gradient" | "image" | "pattern";
+    backgroundGradient?: string;
+    backgroundImageUrl?: string;
+    overlayColor?: string;
+    overlayOpacity?: number;
+    buttonColor?: string;
+    buttonTextColor?: string;
   };
   sections: LandingPageSection[];
   metrics: {

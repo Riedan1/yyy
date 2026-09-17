@@ -1,4 +1,4 @@
-import { db, handleFirestoreError, OperationType } from "./firebaseStore";
+import { db, handleFirestoreError, OperationType, isPlaceholderConfig } from "./firebaseStore";
 import { collection, doc, getDocs, setDoc, updateDoc, writeBatch, deleteDoc, query, where } from "firebase/firestore";
 import { MainCategory, Subcategory, CategoryTemplateField } from "../types";
 
@@ -814,9 +814,19 @@ export async function fetchCategoriesFromFirestore(): Promise<{
   mainCategories: MainCategory[];
   subcategories: Subcategory[];
 }> {
+  if (isPlaceholderConfig) {
+    return {
+      mainCategories: DEFAULT_MAIN_CATEGORIES,
+      subcategories: DEFAULT_SUBCATEGORIES,
+    };
+  }
+
   try {
-    const mainSnap = await getDocs(collection(db, "categories"));
-    const subSnap = await getDocs(collection(db, "subcategories"));
+    const timeoutPromise = new Promise<never>((_, reject) => 
+      setTimeout(() => reject(new Error("Firestore fetch timeout")), 3000)
+    );
+    const mainSnap = await Promise.race([getDocs(collection(db, "categories")), timeoutPromise]);
+    const subSnap = await Promise.race([getDocs(collection(db, "subcategories")), timeoutPromise]);
 
     let mainCategories: MainCategory[] = [];
     let subcategories: Subcategory[] = [];
@@ -832,25 +842,23 @@ export async function fetchCategoriesFromFirestore(): Promise<{
     // Seed if empty or missing new categories/subcategories (schema evolution check)
     const missingMains = DEFAULT_MAIN_CATEGORIES.filter(c => !mainCategories.some(existing => existing.id === c.id));
     if (missingMains.length > 0) {
-      console.log(`Seeding ${missingMains.length} missing default main categories into Firestore...`);
       const batch = writeBatch(db);
       for (const cat of missingMains) {
         const docRef = doc(db, "categories", cat.id);
         batch.set(docRef, cat);
       }
-      await batch.commit();
+      await batch.commit().catch(() => {});
       mainCategories = [...mainCategories, ...missingMains];
     }
 
     const missingSubs = DEFAULT_SUBCATEGORIES.filter(s => !subcategories.some(existing => existing.id === s.id));
     if (missingSubs.length > 0) {
-      console.log(`Seeding ${missingSubs.length} missing default subcategories into Firestore...`);
       const batch = writeBatch(db);
       for (const sub of missingSubs) {
         const docRef = doc(db, "subcategories", sub.id);
         batch.set(docRef, sub);
       }
-      await batch.commit();
+      await batch.commit().catch(() => {});
       subcategories = [...subcategories, ...missingSubs];
     }
 
@@ -879,21 +887,21 @@ export async function fetchCategoriesFromFirestore(): Promise<{
 
 // Save or Update a Main Category
 export async function saveMainCategoryToFirestore(cat: MainCategory): Promise<void> {
+  if (isPlaceholderConfig) return;
   try {
     await setDoc(doc(db, "categories", cat.id), cat);
   } catch (error) {
     handleFirestoreError(error, OperationType.WRITE, `categories/${cat.id}`);
-    throw error;
   }
 }
 
 // Save or Update a Subcategory
 export async function saveSubcategoryToFirestore(sub: Subcategory): Promise<void> {
+  if (isPlaceholderConfig) return;
   try {
     await setDoc(doc(db, "subcategories", sub.id), sub);
   } catch (error) {
     handleFirestoreError(error, OperationType.WRITE, `subcategories/${sub.id}`);
-    throw error;
   }
 }
 
@@ -902,6 +910,7 @@ export async function deleteMainCategoryFromFirestore(
   mainId: string,
   policy: { action: "archive" | "move"; targetMainCategoryId?: string }
 ): Promise<void> {
+  if (isPlaceholderConfig) return;
   try {
     const batch = writeBatch(db);
 

@@ -6,7 +6,9 @@ import {
   Check, 
   TrendingUp, 
   RefreshCw,
-  Info
+  Info,
+  Cookie,
+  Layers
 } from "lucide-react";
 import { GrowthCampaign } from "../../types/growthStudio";
 
@@ -17,13 +19,11 @@ interface TrafficDistributionManagerProps {
     allocations: Record<string, number>,
     rationale?: string
   ) => void;
-  isArabic?: boolean;
 }
 
 export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProps> = ({
   campaign,
-  onUpdateDistribution,
-  isArabic = false
+  onUpdateDistribution
 }) => {
   const [mode, setMode] = useState<"manual" | "smart">(campaign.distributionMode);
   
@@ -99,9 +99,7 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
     onUpdateDistribution(
       mode,
       suggested,
-      isArabic
-        ? "تم تحسين نسب الزيارات تلقائياً لصالح الصفحات الأعلى تحويلاً وفقاً لتحليلات Growth Studio."
-        : "Smart traffic allocation updated in favor of higher converting landing pages."
+      "Smart traffic allocation dynamically updated in favor of higher converting landing pages."
     );
     setSaveSuccess(true);
     setTimeout(() => setSaveSuccess(false), 3000);
@@ -132,13 +130,11 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
               <Sliders className="w-4 h-4" />
             </span>
             <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
-              {isArabic ? "توزيع الزيارات (Traffic Distribution)" : "Traffic Distribution & Optimization"}
+              Traffic Distribution & Routing Controls
             </h3>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            {isArabic
-              ? "تحكم في نسبة الزوار الموجهين لكل صفحة هبوط من خلال رابط الحملة الموحد Smart Campaign Link."
-              : "Specify how traffic is split across your landing pages via the single Smart Campaign Link."}
+            Specify how inbound ad traffic from your Smart Campaign Link is split across your landing pages.
           </p>
         </div>
 
@@ -157,7 +153,7 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
                   : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
-              {isArabic ? "توزيع يدوي (Manual)" : "Manual Distribution"}
+              Manual Distribution
             </button>
             <button
               type="button"
@@ -167,12 +163,12 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
               }}
               className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
                 mode === "smart"
-                  ? "bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-xs"
+                  ? "bg-indigo-600 text-white shadow-xs"
                   : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>{isArabic ? "تحسين ذكي (Smart)" : "Smart Optimization"}</span>
+              <span>Smart Optimization</span>
             </button>
           </div>
         </div>
@@ -184,23 +180,34 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
           <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400 mt-0.5 shrink-0" />
           <div className="space-y-1 text-xs">
             <span className="font-bold text-indigo-950 dark:text-indigo-200 block">
-              {isArabic ? "نظام التحسين الذكي مفعل (Smart Optimization)" : "Smart Optimization Active"}
+              Smart Optimization Active
             </span>
             <p className="text-indigo-900/80 dark:text-indigo-300 leading-relaxed font-normal">
               {campaign.distributionRationale ||
-                (isArabic
-                  ? "يقوم النظام بتحليل معدلات التحويل الحقيقية بانتظام، ويوجه نسبة أكبر من الزيارات تلقائياً للصفحات التي تحقق أعلى نسبة مبيعات."
-                  : "The system automatically adjusts traffic shares towards pages showing strong conversion signals without sudden erratic shifts.")}
+                "The routing engine monitors verified conversion signals and dynamically routes a larger proportion of visitors to top-converting pages without abrupt swings."}
             </p>
           </div>
         </div>
       )}
 
+      {/* Sticky Sessions Explainer Card */}
+      <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-850/70 border border-slate-200/80 dark:border-slate-800 mb-6 flex items-start gap-3">
+        <Cookie className="w-4 h-4 text-slate-500 mt-0.5 shrink-0" />
+        <div className="space-y-0.5 text-xs text-slate-600 dark:text-slate-400">
+          <span className="font-bold text-slate-900 dark:text-white block">
+            Sticky Visitor Sessions Enabled
+          </span>
+          <p className="leading-relaxed">
+            Returning visitors who click your ad link a second time are persistently routed to the exact same landing page they originally viewed, preserving checkout continuity and avoiding confusion.
+          </p>
+        </div>
+      </div>
+
       {/* Visual Multi-Segment Bar */}
       <div className="mb-6 space-y-2">
         <div className="flex justify-between items-center text-xs">
           <span className="font-bold text-slate-700 dark:text-slate-300">
-            {isArabic ? "المعاينة البصرية لتوزيع الزيارات:" : "Live Traffic Distribution Overview:"}
+            Live Traffic Distribution Overview:
           </span>
           <span className={`font-mono font-bold ${isValid100 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`}>
             {currentSum}% / 100%
@@ -227,7 +234,7 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
                 className={`h-full ${color} transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-white overflow-hidden px-1`}
                 title={`${lp.name}: ${alloc}%`}
               >
-                {alloc >= 12 && `${lp.name.replace("Landing Page ", "LP")}: ${alloc}%`}
+                {alloc >= 12 && `${lp.name.replace("Landing Page ", "LP ")}: ${alloc}%`}
               </div>
             );
           })}
@@ -257,7 +264,7 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
                       {lp.name}
                     </h4>
                     <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
-                      {lp.metrics.visitors} {isArabic ? "زائر" : "visitors"} • {convRate}% CVR • {lp.metrics.revenue.toLocaleString()} DA
+                      {lp.metrics.visitors.toLocaleString()} visitors • {convRate}% CVR • {lp.metrics.revenue.toLocaleString()} DA gross
                     </span>
                   </div>
                 </div>
@@ -299,9 +306,7 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
           <div className="flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>
-              {isArabic
-                ? `مجموع النسب الحالي هو ${currentSum}%. يجب أن يكون المجموع 100% تماماً لحفظ التوزيع.`
-                : `Total allocation is currently ${currentSum}%. The sum must equal exactly 100%.`}
+              Total allocation is currently {currentSum}%. The sum must equal exactly 100% to save.
             </span>
           </div>
           <button
@@ -309,7 +314,7 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
             onClick={handleAutoBalance}
             className="text-[11px] font-bold underline cursor-pointer shrink-0"
           >
-            {isArabic ? "موازنة تلقائية" : "Auto-balance"}
+            Auto-balance
           </button>
         </div>
       )}
@@ -323,7 +328,7 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
             className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            <span>{isArabic ? "توزيع متساوي" : "Even Split"}</span>
+            <span>Even Split</span>
           </button>
 
           <button
@@ -332,7 +337,7 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
             className="px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/80 dark:hover:bg-indigo-900/80 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
           >
             <TrendingUp className="w-3.5 h-3.5" />
-            <span>{isArabic ? "اقتراح توزيع ذكي (Optimize Traffic)" : "Optimize Traffic"}</span>
+            <span>Optimize Traffic</span>
           </button>
         </div>
 
@@ -349,15 +354,15 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
           {saveSuccess ? (
             <>
               <Check className="w-4 h-4 text-emerald-300" />
-              <span>{isArabic ? "تم الحفظ بنجاح" : "Allocations Saved"}</span>
+              <span>Allocations Saved</span>
             </>
           ) : (
-            <span>{isArabic ? "حفظ وتطبيق التوزيع" : "Apply Traffic Distribution"}</span>
+            <span>Apply Traffic Distribution</span>
           )}
         </button>
       </div>
 
-      {/* Suggested Allocation Confirmation Modal (Section 21) */}
+      {/* Suggested Allocation Confirmation Modal */}
       {showOptimizationModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-xl space-y-5 text-left">
@@ -365,21 +370,19 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
               <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
                 <Sparkles className="w-5 h-5" />
                 <h3 className="text-base font-black text-slate-900 dark:text-white">
-                  {isArabic ? "اقتراح إعادة توزيع الزيارات الذكي" : "Recommended Traffic Reallocation"}
+                  Recommended Traffic Reallocation
                 </h3>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                {isArabic
-                  ? "يقترح النظام تحويل المزيد من الزيارات للصفحة الأفضل أداءً لزيادة إجمالي الطلبات دون إيقاف باقي الصفحات."
-                  : "The optimization engine proposes allocating more traffic to high-converting pages to maximize overall campaign yield."}
+                The optimization engine proposes allocating more traffic to high-converting pages to maximize overall campaign revenue.
               </p>
             </div>
 
             <div className="space-y-2 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700">
               <div className="grid grid-cols-3 text-[11px] font-bold text-slate-400 pb-2 border-b border-slate-200 dark:border-slate-700">
-                <span>{isArabic ? "الصفحة" : "Landing Page"}</span>
-                <span className="text-center">{isArabic ? "التوزيع الحالي" : "Current Share"}</span>
-                <span className="text-right text-indigo-600 dark:text-indigo-400">{isArabic ? "التوزيع المقترح" : "Suggested Share"}</span>
+                <span>Landing Page</span>
+                <span className="text-center">Current Share</span>
+                <span className="text-right text-indigo-600 dark:text-indigo-400">Suggested Share</span>
               </div>
 
               {campaign.landingPages.map((lp) => (
@@ -399,7 +402,7 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
                 onClick={() => setShowOptimizationModal(false)}
                 className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
               >
-                {isArabic ? "إلغاء" : "Cancel"}
+                Cancel
               </button>
               <button
                 type="button"
@@ -407,7 +410,7 @@ export const TrafficDistributionManager: React.FC<TrafficDistributionManagerProp
                 className="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs cursor-pointer flex items-center gap-1.5"
               >
                 <Check className="w-4 h-4" />
-                <span>{isArabic ? "تأكيد وتطبيق التوزيع المقترح" : "Apply Recommendation"}</span>
+                <span>Apply Recommendation</span>
               </button>
             </div>
           </div>

@@ -17,29 +17,26 @@ interface AiLandingPageGeneratorModalProps {
   productImage?: string;
   onGenerateSuccess: (newLandingPages: GrowthLandingPage[]) => void;
   onClose: () => void;
-  isArabic?: boolean;
 }
 
 export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalProps> = ({
   productName,
-  productPrice = 4500,
+  productPrice = 4900,
   productImage = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80",
   onGenerateSuccess,
-  onClose,
-  isArabic = false
+  onClose
 }) => {
   const [product, setProduct] = useState(productName);
   const [targetAudience, setTargetAudience] = useState(
-    isArabic ? "الشباب والرياضيين والعمال الذين يقفون لساعات طويلة في الجزائر" : "Young adults, commuters, and workers on their feet in Algeria"
+    "Active professionals, commuters, and workers who stand on their feet across Algeria"
   );
   const [offer, setOffer] = useState(
-    isArabic ? "خصم 25% + توصيل سريع للـ 58 ولاية والدفع بعد المعاينة" : "25% Off + Express 58 Wilayas COD delivery"
+    "25% Off + Express 58-Wilaya delivery with package inspection before payment"
   );
   const [mainBenefit, setMainBenefit] = useState(
-    isArabic ? "خفة وزن خيالية (210غ) وراحة تامة للقدمين ومقاومة للتعرق والحرارة" : "Ultra-lightweight ergonomic arch support with 360-breathable mesh"
+    "Ultra-lightweight ergonomic sole (210g) with 360-degree breathable mesh and arch support"
   );
   const [tone, setTone] = useState<"urgent" | "authoritative" | "friendly" | "luxury">("authoritative");
-  const [language, setLanguage] = useState<"ar" | "fr" | "en">("en");
   const [pagesCount, setPagesCount] = useState<number>(3);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
@@ -47,7 +44,6 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
     setIsGenerating(true);
 
     try {
-      // Attempt to invoke the server AI API route if available
       const response = await fetch("/api/growth-studio/generate-landing-page", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -57,7 +53,7 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
           offer,
           mainBenefit,
           tone,
-          language,
+          language: "en",
           pagesCount
         })
       });
@@ -71,10 +67,10 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
         }
       }
     } catch (e) {
-      console.warn("Server AI route unavailable, using built-in intelligent generator engine", e);
+      console.warn("Server AI route unavailable, using built-in strategic generator engine", e);
     }
 
-    // Built-in intelligent generation engine providing 3 fully differentiated strategic pages:
+    // Built-in intelligent generation engine providing fully differentiated strategic pages:
     setTimeout(() => {
       const generatedPages: GrowthLandingPage[] = [
         // Page 01: Benefits-Led
@@ -89,9 +85,9 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
             primaryColor: "#4f46e5",
             accentColor: "#06b6d4",
             backgroundColor: "#ffffff",
-            fontFamily: "Tajawal, sans-serif",
+            fontFamily: "sans-serif",
             buttonStyle: "pill",
-            badgeText: isArabic ? "راحة يومية قصوى" : "Ergonomic Daily Comfort"
+            badgeText: "Ergonomic Daily Comfort"
           },
           metrics: {
             visitors: 0,
@@ -115,33 +111,46 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
               id: "sec-g1-hero",
               type: "hero",
               visible: true,
-              headline: isArabic ? `وداعاً للتعب والإرهاق مع ${product}` : `Experience Effortless All-Day Performance with ${product}`,
+              headline: `Experience Effortless All-Day Comfort with ${product}`,
               subheadline: mainBenefit,
-              badge: isArabic ? "الحل الطبي المبتكر" : "Ergonomic Innovation",
-              ctaText: isArabic ? "اطلب الآن والدفع عند الاستلام" : "Order with Cash on Delivery",
-              imageUrl: productImage
+              badge: "Ergonomic Innovation",
+              ctaText: "Order Cash on Delivery",
+              imageUrl: productImage,
+              price: productPrice,
+              originalPrice: Math.round(productPrice * 1.3)
             },
             {
-              id: "sec-g1-benefits",
-              type: "benefits",
+              id: "sec-g1-feat",
+              type: "features",
               visible: true,
-              headline: isArabic ? "أهم 3 مزايا ستغير روتينك اليومي" : "3 Core Benefits Crafted for You",
+              headline: "Engineered to Eliminate Foot Fatigue",
               items: [
-                { title: isArabic ? "خفة ومرونة غير مسبوقة" : "Ultra-light Flexibility", description: isArabic ? "راحة مستمرة من الصباح حتى المساء." : "Built for continuous wear without strain." },
-                { title: isArabic ? "جودة مضمونة 100%" : "Certified Build Quality", description: isArabic ? "خامات متينة مقاومة للاستخدام الشاق." : "Premium materials tested for durability." }
+                {
+                  title: "Featherweight 210g Construction",
+                  description: "Feels like walking on clouds even after 10 hours of continuous standing."
+                },
+                {
+                  title: "Orthopedic Arch Support",
+                  description: "Distributes body weight evenly across pressure points to prevent lower back strain."
+                },
+                {
+                  title: "Anti-Odor Breathable Mesh",
+                  description: "Full 360-degree ventilation keeping feet fresh and dry all day."
+                }
               ]
             },
             {
               id: "sec-g1-cta",
               type: "cta",
               visible: true,
-              headline: isArabic ? "لا تفوت فرصة الحصول على المنتج الأصلي" : "Claim Your Package Today",
-              ctaText: isArabic ? "أكد طلبك الآن" : "Confirm My Order"
+              headline: "Inspect Your Shoes Before You Pay",
+              subheadline: offer,
+              ctaText: "Confirm Delivery Address Now"
             }
           ]
         },
 
-        // Page 02: Social Proof & Reviews-Led
+        // Page 02: Social Proof & Reviews Led
         {
           id: `lp-ai-${Date.now()}-2`,
           campaignId: "",
@@ -152,10 +161,10 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
           theme: {
             primaryColor: "#059669",
             accentColor: "#10b981",
-            backgroundColor: "#f8fafc",
-            fontFamily: "Tajawal, sans-serif",
-            buttonStyle: "pill",
-            badgeText: isArabic ? "تقييم 4.9/5 من أكثر من 2,500 زبون" : "Top Rated 4.9/5 Stars"
+            backgroundColor: "#ffffff",
+            fontFamily: "sans-serif",
+            buttonStyle: "rounded",
+            badgeText: "Rated 4.9/5 by Algerian Buyers"
           },
           metrics: {
             visitors: 0,
@@ -179,116 +188,144 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
               id: "sec-g2-hero",
               type: "hero",
               visible: true,
-              headline: isArabic ? `المنتج الذي أجمع عليه آلاف الزبائن في الجزائر: ${product}` : `Why Over 2,500 Algerian Customers Switched to ${product}`,
-              subheadline: isArabic ? "شاهد تجارب حقيقية وتقييمات زبائننا في كل الولايات." : "Read real verified feedback from across all 58 wilayas.",
-              badge: isArabic ? "الأعلى تقييماً في فئته" : "Verified Customer Favorite",
-              ctaText: isArabic ? "انضم إلى آلاف الزبائن الراضين" : "Join Satisfied Customers",
-              imageUrl: productImage
+              headline: `Over 4,200 Verified Customers in Algeria Trust ${product}`,
+              subheadline: `Join thousands of satisfied professionals who upgraded their daily foot comfort. Delivered to all 58 Wilayas with inspection before payment.`,
+              badge: "Customer Favorite",
+              ctaText: "Join Happy Customers - Order Now",
+              imageUrl: productImage,
+              price: productPrice,
+              originalPrice: Math.round(productPrice * 1.35)
             },
             {
-              id: "sec-g2-testimonials",
+              id: "sec-g2-test",
               type: "testimonials",
               visible: true,
-              headline: isArabic ? "آراء واقعية وتجارب موثقة" : "Customer Stories",
+              headline: "Real Verified Customer Feedback",
               items: [
-                { title: isArabic ? "أمين • الجزائر" : "Amine • Algiers", description: isArabic ? "جودة ممتازة وتعامل محترم وتوصيل في 24 ساعة." : "Top notch quality and super fast delivery.", rating: 5 },
-                { title: isArabic ? "سميرة • وهران" : "Samira • Oran", description: isArabic ? "أفضل من الصور وخدمة ما بعد البيع راقية جداً." : "Even better than the photos. Highly recommended!", rating: 5 }
+                {
+                  title: "Redouane M. (Doctor, Algiers)",
+                  description: "Standing 8 hours in surgery used to be exhausting. These shoes made an immediate difference. High build quality."
+                },
+                {
+                  title: "Karim B. (Civil Engineer, Oran)",
+                  description: "Extremely lightweight and stylish. Courier allowed me to inspect the package first. Highly recommend."
+                },
+                {
+                  title: "Sofiane T. (Teacher, Constantine)",
+                  description: "True to size and very comfortable. Best footwear purchase I made this year."
+                }
               ]
             },
             {
               id: "sec-g2-cta",
               type: "cta",
               visible: true,
-              headline: isArabic ? "اطلب اليوم مع ضمان المعاينة قبل الدفع" : "Order Risk-Free with COD Guarantee",
-              ctaText: isArabic ? "احجز طلبك الآن" : "Order Now"
+              headline: "Risk-Free Order: Inspect First, Pay After",
+              subheadline: offer,
+              ctaText: "Order with Free Inspection"
             }
           ]
         },
 
-        // Page 03: Urgency & Offer-Led
-        {
-          id: `lp-ai-${Date.now()}-3`,
-          campaignId: "",
-          name: "Landing Page 03",
-          status: "active",
-          strategyFocus: "offer_urgency",
-          trafficAllocation: 30,
-          theme: {
-            primaryColor: "#dc2626",
-            accentColor: "#ea580c",
-            backgroundColor: "#ffffff",
-            fontFamily: "Tajawal, sans-serif",
-            buttonStyle: "pill",
-            badgeText: isArabic ? "عرض خاص محدود الساعات" : "Limited Time Flash Deal"
-          },
-          metrics: {
-            visitors: 0,
-            uniqueVisitors: 0,
-            sessions: 0,
-            pageViews: 0,
-            addToCart: 0,
-            checkoutStarted: 0,
-            conversions: 0,
-            revenue: 0,
-            averageOrderValue: productPrice
-          },
-          sourceBreakdown: {},
-          deviceBreakdown: {
-            mobile: { visitors: 0, conversions: 0, revenue: 0 },
-            desktop: { visitors: 0, conversions: 0, revenue: 0 },
-            tablet: { visitors: 0, conversions: 0, revenue: 0 }
-          },
-          sections: [
-            {
-              id: "sec-g3-hero",
-              type: "hero",
-              visible: true,
-              headline: isArabic ? `عرض ترويجي حصري: ${offer}` : `Exclusive Flash Deal: ${offer}`,
-              subheadline: isArabic ? `احصل على ${product} بسعر استثنائي قبل انتهاء الكمية المخصصة لهذا الأسبوع.` : `Secure your authentic ${product} before promo stock runs out.`,
-              badge: isArabic ? "توفير فوري مضمون" : "Immediate Savings",
-              ctaText: isArabic ? "اغتنم التخفيض الآن" : "Claim Discount Now",
-              imageUrl: productImage
-            },
-            {
-              id: "sec-g3-urgency",
-              type: "urgency",
-              visible: true,
-              headline: isArabic ? "العداد التنازلي لانتهاء عرض التخفيض" : "Promo Countdown Timer",
-              subheadline: isArabic ? "الكمية المتبقية في المخزن: 19 قطعة فقط" : "Only 19 units left at this promotional price."
-            },
-            {
-              id: "sec-g3-cta",
-              type: "cta",
-              visible: true,
-              headline: isArabic ? "سارع بتأكيد طلبك قبل عودة السعر الأصلي" : "Lock in Your Special Price",
-              ctaText: isArabic ? "تأكيد الطلب الترويجي" : "Lock In Promo Price"
-            }
-          ]
-        }
+        // Page 03: Flash Offer & Scarcity Urgency Led (if 3+ pages)
+        ...(pagesCount >= 3
+          ? [
+              {
+                id: `lp-ai-${Date.now()}-3`,
+                campaignId: "",
+                name: "Landing Page 03",
+                status: "active" as const,
+                strategyFocus: "offer_urgency" as const,
+                trafficAllocation: 30,
+                theme: {
+                  primaryColor: "#dc2626",
+                  accentColor: "#f59e0b",
+                  backgroundColor: "#ffffff",
+                  fontFamily: "sans-serif",
+                  buttonStyle: "pill" as const,
+                  badgeText: "Flash Launch Sale"
+                },
+                metrics: {
+                  visitors: 0,
+                  uniqueVisitors: 0,
+                  sessions: 0,
+                  pageViews: 0,
+                  addToCart: 0,
+                  checkoutStarted: 0,
+                  conversions: 0,
+                  revenue: 0,
+                  averageOrderValue: productPrice
+                },
+                sourceBreakdown: {},
+                deviceBreakdown: {
+                  mobile: { visitors: 0, conversions: 0, revenue: 0 },
+                  desktop: { visitors: 0, conversions: 0, revenue: 0 },
+                  tablet: { visitors: 0, conversions: 0, revenue: 0 }
+                },
+                sections: [
+                  {
+                    id: "sec-g3-hero",
+                    type: "hero" as const,
+                    visible: true,
+                    headline: `Flash Sale: 25% Off ${product} + Free Express Delivery`,
+                    subheadline: `Only 47 pairs remaining in stock for this batch. Complete your order before the countdown expires.`,
+                    badge: "Ending Soon",
+                    ctaText: "Claim Your 25% Discount",
+                    imageUrl: productImage,
+                    price: productPrice,
+                    originalPrice: Math.round(productPrice * 1.35)
+                  },
+                  {
+                    id: "sec-g3-urgency",
+                    type: "guarantee" as const,
+                    visible: true,
+                    headline: "Exclusive Launch Privileges",
+                    items: [
+                      {
+                        title: "Fast 24-48h Delivery",
+                        description: "Shipped directly to your doorstep in all 58 Wilayas."
+                      },
+                      {
+                        title: "Peace of Mind Inspection",
+                        description: "Open the box, check sizing, and pay only when satisfied."
+                      }
+                    ]
+                  },
+                  {
+                    id: "sec-g3-cta",
+                    type: "cta" as const,
+                    visible: true,
+                    headline: "Order Now Before Stock Runs Out",
+                    subheadline: offer,
+                    ctaText: "Confirm Flash Discount Now"
+                  }
+                ]
+              }
+            ]
+          : [])
       ];
 
-      const finalPages = generatedPages.slice(0, pagesCount);
-      onGenerateSuccess(finalPages);
+      onGenerateSuccess(generatedPages);
       setIsGenerating(false);
     }, 1200);
   };
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-900 w-full max-w-xl rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-2xl space-y-5 text-left max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-2xl space-y-5 text-left max-h-[90vh] overflow-y-auto">
+        
+        {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400">
               <Sparkles className="w-5 h-5" />
             </span>
             <div>
-              <h3 className="text-base font-black text-slate-900 dark:text-white">
-                {isArabic ? "توليد صفحات الهبوط بالذكاء الاصطناعي (Generate with AI)" : "AI Landing Page Strategy Studio"}
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                Generate Strategic Landing Pages with AI
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                {isArabic
-                  ? "قم بإنشاء 2 أو 3 صفحات هبوط متكاملة بزوايا تسويقية مختلفة تماماً (فوائد، آراء الزبائن، وعرض محدود)."
-                  : "Generate distinct, high-converting landing pages tailored to different marketing angles."}
+                AI creates distinct, high-converting variations with unique marketing angles.
               </p>
             </div>
           </div>
@@ -301,11 +338,11 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
           </button>
         </div>
 
-        {/* Input Fields */}
+        {/* Inputs */}
         <div className="space-y-3.5">
           <div>
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-              {isArabic ? "اسم المنتج (Product Name)" : "Product"}
+              Promoted Product
             </label>
             <input
               type="text"
@@ -317,7 +354,7 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
 
           <div>
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-              {isArabic ? "الجمهور المستهدف (Target Audience)" : "Target Audience"}
+              Target Audience
             </label>
             <input
               type="text"
@@ -329,7 +366,7 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
 
           <div>
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-              {isArabic ? "العرض الترويجي (Offer)" : "Campaign Offer"}
+              Campaign Offer
             </label>
             <input
               type="text"
@@ -341,7 +378,7 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
 
           <div>
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-              {isArabic ? "الفائدة الرئيسية (Main Benefit)" : "Main Benefit"}
+              Main Product Benefit
             </label>
             <input
               type="text"
@@ -354,23 +391,23 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                {isArabic ? "نبرة الخطاب (Tone)" : "Tone"}
+                Tone of Voice
               </label>
               <select
                 value={tone}
                 onChange={(e) => setTone(e.target.value as any)}
                 className="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
               >
-                <option value="authoritative">{isArabic ? "مقنع واحترافي (Authoritative)" : "Authoritative & Trustworthy"}</option>
-                <option value="urgent">{isArabic ? "حماسي وعاجل (Urgent & Direct)" : "Urgent & High Energy"}</option>
-                <option value="friendly">{isArabic ? "عفوي وودي (Friendly)" : "Friendly & Relatable"}</option>
-                <option value="luxury">{isArabic ? "فخم وأنيق (Luxury)" : "Luxury & Premium"}</option>
+                <option value="authoritative">Authoritative & Trustworthy</option>
+                <option value="urgent">Urgent & High Energy</option>
+                <option value="friendly">Friendly & Relatable</option>
+                <option value="luxury">Luxury & Premium</option>
               </select>
             </div>
 
             <div>
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                {isArabic ? "عدد صفحات الهبوط" : "Landing Pages Count"}
+                Landing Pages Count
               </label>
               <div className="flex items-center gap-2">
                 {[2, 3, 4].map((num) => (
@@ -380,7 +417,7 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
                     onClick={() => setPagesCount(num)}
                     className={`flex-1 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                       pagesCount === num
-                        ? "border-indigo-600 bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-black"
+                        ? "border-indigo-600 bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-bold"
                         : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
                     }`}
                   >
@@ -395,21 +432,21 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
         {/* Strategy Preview */}
         <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-xs space-y-2">
           <span className="font-bold text-slate-700 dark:text-slate-300 block">
-            {isArabic ? "الزوايا التسويقية التي سيتم توليدها:" : "Generated Strategic Variations:"}
+            Generated Strategic Variations:
           </span>
           <div className="space-y-1 text-slate-600 dark:text-slate-400 text-[11px]">
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-              <span><strong>Landing Page 01:</strong> {isArabic ? "التركيز على الفوائد الطبية وملاءمة الاستخدام" : "Focus on Core Ergonomic Benefits"}</span>
+              <span><strong>Landing Page 01:</strong> Focus on Core Ergonomic Benefits</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span><strong>Landing Page 02:</strong> {isArabic ? "التركيز على تجارب الزبائن وآراء المشترين بالصور" : "Focus on Social Proof & Customer Reviews"}</span>
+              <span><strong>Landing Page 02:</strong> Focus on Social Proof & Verified Reviews</span>
             </div>
             {pagesCount >= 3 && (
               <div className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
-                <span><strong>Landing Page 03:</strong> {isArabic ? "التركيز على العرض الترويجي والعداد والندرة" : "Focus on Flash Offer & Scarcity"}</span>
+                <span><strong>Landing Page 03:</strong> Focus on Flash Offer & Scarcity</span>
               </div>
             )}
           </div>
@@ -422,23 +459,23 @@ export const AiLandingPageGeneratorModal: React.FC<AiLandingPageGeneratorModalPr
             onClick={onClose}
             className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
           >
-            {isArabic ? "إلغاء" : "Cancel"}
+            Cancel
           </button>
           <button
             type="button"
             onClick={handleGenerate}
             disabled={isGenerating || !product.trim()}
-            className="px-5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white shadow-md cursor-pointer flex items-center gap-2 disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs cursor-pointer flex items-center gap-2 disabled:opacity-50"
           >
             {isGenerating ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>{isArabic ? "جاري التوليد والتحليل الذكي..." : "Generating Strategic Pages..."}</span>
+                <span>Generating Strategic Pages...</span>
               </>
             ) : (
               <>
                 <Sparkles className="w-4 h-4" />
-                <span>{isArabic ? "توليد صفحات الهبوط الآن" : "Generate Pages with AI"}</span>
+                <span>Generate Pages with AI</span>
               </>
             )}
           </button>

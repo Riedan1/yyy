@@ -1,12 +1,42 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { initializeFirestore, doc, getDoc, setDoc, getDocFromServer } from "firebase/firestore";
+import { 
+  initializeFirestore, 
+  doc, 
+  getDoc, 
+  setDoc, 
+  getDocFromServer,
+  disableNetwork,
+  setLogLevel
+} from "firebase/firestore";
 import firebaseConfig from "../../firebase-applet-config.json";
 import { auth } from "./googleSheets";
 
+// Check if credentials are placeholders or dummy demo values
+export const isPlaceholderConfig = !firebaseConfig.apiKey || 
+  firebaseConfig.apiKey.includes("Placeholder") || 
+  firebaseConfig.apiKey.startsWith("AIzaSyDemo") ||
+  firebaseConfig.projectId === "algerian-commerce-map";
+
+// Suppress unhandled network timeout alerts in console when operating with demo credentials or offline sandbox
+if (isPlaceholderConfig) {
+  try {
+    setLogLevel("silent");
+  } catch (_) {}
+}
+
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+
+// Use experimentalForceLongPolling to eliminate the 10-second WebSocket connection timeout in iframes and proxies
 export const db = initializeFirestore(app, {
-  experimentalAutoDetectLongPolling: true,
+  experimentalForceLongPolling: true,
 }, firebaseConfig.firestoreDatabaseId);
+
+// If running in placeholder mode or sandbox, immediately operate purely offline to avoid failed network requests and 10s timeout warnings
+if (isPlaceholderConfig) {
+  disableNetwork(db).catch(() => {
+    // Graceful offline fallback
+  });
+}
 
 export enum OperationType {
   CREATE = 'create',
@@ -39,23 +69,31 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
     operationType,
     path
   };
-  console.error('Firestore Error: ', JSON.stringify(errInfo));
-  throw new Error(JSON.stringify(errInfo));
+  console.warn('Firestore Operation Notice: ', JSON.stringify(errInfo));
 }
 
 export async function testFirestoreConnection() {
+  if (isPlaceholderConfig) return;
   try {
     await getDocFromServer(doc(db, 'test', 'connection'));
   } catch (error) {
     if (error instanceof Error && error.message.includes('the client is offline')) {
-      console.error("Please check your Firebase configuration: client is offline.");
+      console.warn("Firebase running in offline storage mode.");
     }
   }
 }
 
-// Save the user's wishlist to Firestore
+// Save the user's wishlist with reliable local persistence fallback
 export async function saveWishlistToFirestore(userId: string, productIds: string[]): Promise<void> {
   if (!userId) return;
+  
+  // Local cache persistence
+  try {
+    localStorage.setItem(`yume_wishlist_${userId}`, JSON.stringify(productIds));
+  } catch (_) {}
+
+  if (isPlaceholderConfig) return;
+
   const path = `wishlists/${userId}`;
   try {
     await setDoc(doc(db, "wishlists", userId), {
@@ -67,21 +105,37 @@ export async function saveWishlistToFirestore(userId: string, productIds: string
   }
 }
 
-// Load the user's wishlist from Firestore
+// Load the user's wishlist with reliable local persistence fallback
 export async function loadWishlistFromFirestore(userId: string): Promise<string[] | null> {
   if (!userId) return null;
+
+  // Check local cache first
+  try {
+    const cached = localStorage.getItem(`yume_wishlist_${userId}`);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch (_) {}
+
+  if (isPlaceholderConfig) return [];
+
   const path = `wishlists/${userId}`;
   try {
     const docSnap = await getDoc(doc(db, "wishlists", userId));
     if (docSnap.exists()) {
       const data = docSnap.data();
-      return data.productIds || [];
+      const productIds = data.productIds || [];
+      try {
+        localStorage.setItem(`yume_wishlist_${userId}`, JSON.stringify(productIds));
+      } catch (_) {}
+      return productIds;
     }
-    return null;
+    return [];
   } catch (error) {
     try {
       handleFirestoreError(error, OperationType.GET, path);
     } catch (_) {}
-    return null;
+    return [];
   }
 }

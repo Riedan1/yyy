@@ -3,14 +3,16 @@ import {
   Link2, 
   Sparkles, 
   Share2, 
-  MousePointerClick, 
-  ShoppingBag, 
   Award,
   Layers,
   ArrowDown,
   Info,
   CheckCircle2,
-  TrendingUp
+  TrendingUp,
+  Sliders,
+  ExternalLink,
+  Copy,
+  Check
 } from "lucide-react";
 import { GrowthCampaign, StrategyFocus } from "../../types/growthStudio";
 
@@ -18,10 +20,9 @@ interface CampaignFlowVisualizationProps {
   campaign: GrowthCampaign;
   onSelectLandingPage?: (lpId: string) => void;
   selectedLpId?: string;
-  isArabic?: boolean;
+  onOpenSmartLink?: () => void;
 }
 
-// Brand-matched colors for ad sources
 const AD_SOURCE_BADGES: Record<string, { label: string; bg: string; text: string; border: string; iconText: string }> = {
   Facebook: { label: "Facebook Ads", bg: "bg-blue-50 dark:bg-blue-950/40", text: "text-blue-700 dark:text-blue-300", border: "border-blue-200 dark:border-blue-800", iconText: "FB" },
   Instagram: { label: "Instagram Ads", bg: "bg-pink-50 dark:bg-pink-950/40", text: "text-pink-700 dark:text-pink-300", border: "border-pink-200 dark:border-pink-800", iconText: "IG" },
@@ -37,11 +38,11 @@ export const CampaignFlowVisualization: React.FC<CampaignFlowVisualizationProps>
   campaign,
   onSelectLandingPage,
   selectedLpId,
-  isArabic = false
+  onOpenSmartLink
 }) => {
   const [hoveredLpId, setHoveredLpId] = useState<string | null>(null);
+  const [copiedLink, setCopiedLink] = useState(false);
 
-  // Find leading page with highest conversion rate (minimum 100 visitors for confidence)
   const totalCampaignVisitors = campaign.landingPages.reduce((acc, lp) => acc + lp.metrics.visitors, 0);
   const totalCampaignConversions = campaign.landingPages.reduce((acc, lp) => acc + lp.metrics.conversions, 0);
   const averageConversionRate = totalCampaignVisitors > 0 ? (totalCampaignConversions / totalCampaignVisitors) * 100 : 0;
@@ -57,18 +58,28 @@ export const CampaignFlowVisualization: React.FC<CampaignFlowVisualizationProps>
   const getFocusLabel = (focus: StrategyFocus) => {
     switch (focus) {
       case "benefits":
-        return isArabic ? "تركيز على الفوائد" : "Benefits-focused";
+        return "Core Benefits & Ergonomics";
       case "social_proof":
-        return isArabic ? "تركيز على التقييمات" : "Social proof & reviews";
+        return "Social Proof & Verified Reviews";
       case "offer_urgency":
-        return isArabic ? "تركيز على العرض والسرعة" : "Offer & urgency";
+        return "Flash Offer & Scarcity";
       case "storytelling":
-        return isArabic ? "قصة المنتج وعفويته" : "Storytelling narrative";
+        return "Storytelling & Brand Narrative";
       case "minimal_clean":
-        return isArabic ? "تصميم مباشر وموجز" : "Direct & minimal";
+        return "Direct & Minimal Layout";
       default:
-        return isArabic ? "مخصص" : "Custom layout";
+        return "Custom Strategic Layout";
     }
+  };
+
+  const smartUrl = typeof window !== "undefined"
+    ? `${window.location.origin}/?growth=${campaign.id}`
+    : `https://yomi.store/growth/${campaign.smartLinkSlug}`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(smartUrl);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
   };
 
   return (
@@ -81,20 +92,18 @@ export const CampaignFlowVisualization: React.FC<CampaignFlowVisualizationProps>
               <Share2 className="w-3.5 h-3.5" />
             </span>
             <h3 className="text-base font-black text-slate-900 dark:text-white tracking-tight">
-              {isArabic ? "مخطط مسار الحملة الذكي (Smart Campaign Flow)" : "Campaign Traffic & Conversion Flow"}
+              Campaign Traffic & Conversion Flow
             </h3>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-2xl">
-            {isArabic
-              ? "رابط إعلاني موحد يوزع زياراتك بدقة بين عدة صفحات هبوط متكاملة ويكتشف الصفحة الأعلى تحويلاً."
-              : "One single ad link routes all your paid channels across multiple full landing pages in real-time."}
+            One single Smart Campaign Link routes paid ad traffic across complete landing pages and discovers the highest-converting destination.
           </p>
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200/80 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>{campaign.distributionMode === "smart" ? (isArabic ? "توزيع ذكي تلقائي" : "Smart Optimization") : (isArabic ? "توزيع يدوي محدد" : "Manual Distribution")}</span>
+            <span>{campaign.distributionMode === "smart" ? "Smart Optimization" : "Manual Distribution"}</span>
           </span>
         </div>
       </div>
@@ -102,10 +111,10 @@ export const CampaignFlowVisualization: React.FC<CampaignFlowVisualizationProps>
       {/* FLOW CONTAINER */}
       <div className="relative flex flex-col items-center gap-6 max-w-5xl mx-auto">
 
-        {/* 1. TOP LEVEL: AD SOURCES */}
+        {/* 1. TOP LEVEL: AD TRAFFIC SOURCES */}
         <div className="w-full flex flex-col items-center">
           <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2.5 flex items-center gap-1.5">
-            <span>{isArabic ? "1. مصادر الزيارات الإعلانية" : "Ad Traffic Sources"}</span>
+            <span>1. Ad Traffic Sources</span>
           </div>
           
           <div className="flex flex-wrap items-center justify-center gap-2.5 p-3 rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 shadow-xs max-w-3xl">
@@ -133,30 +142,41 @@ export const CampaignFlowVisualization: React.FC<CampaignFlowVisualizationProps>
         </div>
 
         {/* 2. SMART CAMPAIGN LINK NODE */}
-        <div className="w-full max-w-md">
-          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-indigo-900 via-slate-900 to-indigo-950 text-white border border-indigo-500/30 shadow-md relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-3 opacity-15 text-indigo-300">
-              <Link2 className="w-16 h-16" />
-            </div>
-
+        <div className="w-full max-w-lg">
+          <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 text-white border border-indigo-500/30 shadow-md relative overflow-hidden group">
             <div className="flex items-center justify-between gap-3 relative z-10">
-              <div className="space-y-1">
+              <div className="space-y-1 min-w-0">
                 <div className="flex items-center gap-1.5 text-[11px] font-bold text-indigo-300 uppercase tracking-wider">
                   <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>{isArabic ? "رابط الحملة الموحد" : "Single Campaign Destination"}</span>
+                  <span>Single Campaign Destination (Smart Link)</span>
                 </div>
-                <h4 className="text-sm sm:text-base font-black tracking-tight text-white flex items-center gap-2">
-                  <span className="font-mono text-indigo-200">yomi.app/growth/{campaign.smartLinkSlug}</span>
+                <h4 className="text-xs sm:text-sm font-black font-mono tracking-tight text-white truncate">
+                  {smartUrl}
                 </h4>
                 <p className="text-[11px] text-slate-300 font-normal">
-                  {isArabic
-                    ? "الرابط الوحيد الذي تضعه في جميع إعلاناتك على فيسبوك، تيك توك، وإنستغرام."
-                    : "The single URL to place inside your ad creatives. No individual links needed."}
+                  Place this single URL in all your ad creatives. Traffic splits automatically.
                 </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-white/10 border border-white/20 text-white shrink-0">
-                <Link2 className="w-5 h-5" />
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={handleCopy}
+                  className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center gap-1"
+                >
+                  {copiedLink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedLink ? "Copied" : "Copy"}</span>
+                </button>
+                {onOpenSmartLink && (
+                  <button
+                    type="button"
+                    onClick={onOpenSmartLink}
+                    className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors cursor-pointer"
+                    title="Smart Link Details"
+                  >
+                    <Link2 className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -164,15 +184,16 @@ export const CampaignFlowVisualization: React.FC<CampaignFlowVisualizationProps>
           {/* Connector Down with Traffic Distribution Engine Label */}
           <div className="flex flex-col items-center my-1.5 text-slate-300 dark:text-slate-600">
             <div className="w-0.5 h-6 bg-gradient-to-b from-indigo-500 to-slate-400 dark:to-slate-600" />
-            <div className="px-3 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200/80 dark:border-indigo-800 text-[10px] font-mono font-bold text-indigo-700 dark:text-indigo-300 shadow-2xs">
-              {isArabic ? "محرك التوزيع الذكي للزيارات" : "Traffic Distribution Engine"}
+            <div className="px-3 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200/80 dark:border-indigo-800 text-[10px] font-mono font-bold text-indigo-700 dark:text-indigo-300 shadow-2xs flex items-center gap-1">
+              <Sliders className="w-3 h-3" />
+              <span>Traffic Distribution Engine</span>
             </div>
             <div className="w-0.5 h-4 bg-slate-400 dark:bg-slate-600" />
             <ArrowDown className="w-4 h-4 text-slate-400 -mt-1" />
           </div>
         </div>
 
-        {/* 3. MIDDLE LEVEL: TRAFFIC DISTRIBUTION TO LANDING PAGES */}
+        {/* 3. MIDDLE LEVEL: TRAFFIC DISTRIBUTION TO FULL LANDING PAGES */}
         <div className="w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {campaign.landingPages.map((lp, idx) => {
@@ -207,21 +228,21 @@ export const CampaignFlowVisualization: React.FC<CampaignFlowVisualizationProps>
                         {isLeading && (
                           <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                             <Award className="w-3 h-3 text-emerald-600" />
-                            <span>{isArabic ? "الأعلى أداءً" : "Leading Page"}</span>
+                            <span>Leading Page</span>
                           </span>
                         )}
                       </div>
 
                       <div className="flex items-center gap-1 text-xs font-black font-mono px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-800/60">
                         <span>{lp.trafficAllocation}%</span>
-                        <span className="text-[10px] text-slate-500">{isArabic ? "زيارات" : "traffic"}</span>
+                        <span className="text-[10px] text-slate-500 font-normal">traffic</span>
                       </div>
                     </div>
 
                     {/* Progress Bar of Traffic Allocation */}
                     <div className="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden mb-3">
                       <div 
-                        className="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full transition-all duration-500" 
+                        className="h-full bg-indigo-600 rounded-full transition-all duration-500" 
                         style={{ width: `${lp.trafficAllocation}%` }}
                       />
                     </div>
@@ -242,13 +263,13 @@ export const CampaignFlowVisualization: React.FC<CampaignFlowVisualizationProps>
                   <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
                     <div className="grid grid-cols-2 gap-2 text-left">
                       <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60">
-                        <span className="text-[10px] text-slate-400 font-medium block">{isArabic ? "الزوار" : "Visitors"}</span>
+                        <span className="text-[10px] text-slate-400 font-medium block">Visitors</span>
                         <span className="text-sm font-black font-mono text-slate-900 dark:text-white">
                           {lp.metrics.visitors.toLocaleString()}
                         </span>
                       </div>
                       <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60">
-                        <span className="text-[10px] text-slate-400 font-medium block">{isArabic ? "الطلبات / التحويل" : "Conversions"}</span>
+                        <span className="text-[10px] text-slate-400 font-medium block">Conversions</span>
                         <span className="text-sm font-black font-mono text-emerald-600 dark:text-emerald-400">
                           {lp.metrics.conversions} <span className="text-[11px] font-bold">({convRate}%)</span>
                         </span>
@@ -256,7 +277,7 @@ export const CampaignFlowVisualization: React.FC<CampaignFlowVisualizationProps>
                     </div>
 
                     <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400 px-1">
-                      <span>{isArabic ? "المداخيل المحققة:" : "Revenue:"}</span>
+                      <span>Gross Revenue:</span>
                       <span className="font-bold text-slate-900 dark:text-slate-200">
                         {lp.metrics.revenue.toLocaleString()} DA
                       </span>
@@ -281,11 +302,11 @@ export const CampaignFlowVisualization: React.FC<CampaignFlowVisualizationProps>
               <div className="space-y-1">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400">
                   <TrendingUp className="w-4 h-4" />
-                  <span>{isArabic ? "بيانات الأداء الموحدة" : "Consolidated Performance Data"}</span>
+                  <span>Consolidated Performance Data</span>
                 </div>
                 <div className="flex items-baseline gap-3">
                   <span className="text-2xl font-black font-mono text-slate-900 dark:text-white">
-                    {totalCampaignConversions} {isArabic ? "طلب مؤكد" : "total orders"}
+                    {totalCampaignConversions} total orders
                   </span>
                   <span className="text-xs font-mono font-bold text-slate-500">
                     ({averageConversionRate.toFixed(1)}% avg conversion rate)
@@ -296,9 +317,7 @@ export const CampaignFlowVisualization: React.FC<CampaignFlowVisualizationProps>
               {/* Leading Page Highlight */}
               <div className="p-3 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/60 text-left">
                 <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block">
-                  {hasConfidence 
-                    ? (isArabic ? "الصفحة الأفضل أداءً (Leading Page)" : "Best Performing Page")
-                    : (isArabic ? "جمع البيانات قيد التقدم" : "Collecting traffic")}
+                  {hasConfidence ? "Strong Performance Signal" : "Collecting Traffic"}
                 </span>
                 {hasConfidence ? (
                   <div className="flex items-center gap-1.5 mt-0.5">
@@ -310,7 +329,7 @@ export const CampaignFlowVisualization: React.FC<CampaignFlowVisualizationProps>
                 ) : (
                   <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                     <Info className="w-3.5 h-3.5" />
-                    <span>{isArabic ? "نحتاج 150 زائر على الأقل لثقة النتائج" : "Needs 150+ visitors for statistical confidence"}</span>
+                    <span>Requires 150+ visitors for statistical confidence</span>
                   </div>
                 )}
               </div>

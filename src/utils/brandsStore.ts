@@ -1,4 +1,4 @@
-import { db, handleFirestoreError, OperationType } from "./firebaseStore";
+import { db, handleFirestoreError, OperationType, isPlaceholderConfig } from "./firebaseStore";
 import { collection, doc, getDocs, setDoc, updateDoc, writeBatch, deleteDoc, query, where, addDoc } from "firebase/firestore";
 
 export interface Brand {
@@ -167,21 +167,27 @@ export const DEFAULT_BRANDS: Brand[] = [
 
 // Load and initialize Brands from Firestore
 export async function fetchBrandsFromFirestore(): Promise<Brand[]> {
+  if (isPlaceholderConfig) {
+    return DEFAULT_BRANDS.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   try {
-    const snap = await getDocs(collection(db, "brands"));
+    const timeoutPromise = new Promise<never>((_, reject) => 
+      setTimeout(() => reject(new Error("Firestore fetch timeout")), 3000)
+    );
+    const snap = await Promise.race([getDocs(collection(db, "brands")), timeoutPromise]);
     let brands: Brand[] = [];
     snap.forEach((doc) => {
       brands.push(doc.data() as Brand);
     });
 
     if (brands.length === 0) {
-      console.log("Seeding expanded default brands list into Firestore...");
       const batch = writeBatch(db);
       for (const brand of DEFAULT_BRANDS) {
         const docRef = doc(db, "brands", brand.id);
         batch.set(docRef, brand);
       }
-      await batch.commit();
+      await batch.commit().catch(() => {});
       brands = [...DEFAULT_BRANDS];
     }
 
@@ -198,21 +204,21 @@ export async function fetchBrandsFromFirestore(): Promise<Brand[]> {
 
 // Save or Update a Brand
 export async function saveBrandToFirestore(brand: Brand): Promise<void> {
+  if (isPlaceholderConfig) return;
   try {
     await setDoc(doc(db, "brands", brand.id), brand);
   } catch (error) {
     handleFirestoreError(error, OperationType.WRITE, `brands/${brand.id}`);
-    throw error;
   }
 }
 
 // Delete a Brand
 export async function deleteBrandFromFirestore(brandId: string): Promise<void> {
+  if (isPlaceholderConfig) return;
   try {
     await deleteDoc(doc(db, "brands", brandId));
   } catch (error) {
     handleFirestoreError(error, OperationType.DELETE, `brands/${brandId}`);
-    throw error;
   }
 }
 
@@ -222,6 +228,7 @@ export async function submitPendingModelToFirestore(
   brandName: string,
   modelName: string
 ): Promise<void> {
+  if (isPlaceholderConfig) return;
   const id = `pending-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   try {
     const pendingDoc: PendingModel = {
@@ -235,14 +242,17 @@ export async function submitPendingModelToFirestore(
     await setDoc(doc(db, "pending_models", id), pendingDoc);
   } catch (error) {
     handleFirestoreError(error, OperationType.WRITE, `pending_models/${id}`);
-    throw error;
   }
 }
 
 // Fetch all pending custom models submitted for review
 export async function fetchPendingModelsFromFirestore(): Promise<PendingModel[]> {
+  if (isPlaceholderConfig) return [];
   try {
-    const snap = await getDocs(collection(db, "pending_models"));
+    const timeoutPromise = new Promise<never>((_, reject) => 
+      setTimeout(() => reject(new Error("Firestore fetch timeout")), 3000)
+    );
+    const snap = await Promise.race([getDocs(collection(db, "pending_models")), timeoutPromise]);
     const pendingList: PendingModel[] = [];
     snap.forEach((doc) => {
       pendingList.push(doc.data() as PendingModel);
