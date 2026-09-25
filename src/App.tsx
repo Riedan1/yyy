@@ -1938,7 +1938,19 @@ export default function App() {
   const [orders, setOrders] = useState<Order[]>(() => {
     try {
       const saved = localStorage.getItem("yume_cached_orders");
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const hasMaskedData = Array.isArray(parsed) && parsed.some(
+          (o: any) => o?.shopper?.phone?.includes("PROTECTED") || 
+                      o?.shopper?.email?.includes("PROTECTED") || 
+                      (typeof o?.shopper?.name === "string" && o.shopper.name.includes("***"))
+        );
+        if (hasMaskedData) {
+          localStorage.removeItem("yume_cached_orders");
+        } else if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
     } catch (e) {}
     return [
       {

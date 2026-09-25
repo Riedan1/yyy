@@ -225,8 +225,8 @@ async function start() {
       throw new Error("Gemini AI Client not initialized.");
     }
 
-    const { contents, config = {}, defaultModel = "gemini-3.5-flash" } = options;
-    const modelsToTry = [defaultModel, "gemini-3.1-flash-lite"];
+    const { contents, config = {}, defaultModel = "gemini-2.5-flash" } = options;
+    const modelsToTry = [defaultModel, "gemini-2.5-flash-lite", "gemini-2.0-flash"];
     let lastError: any = null;
 
     for (const modelName of modelsToTry) {
@@ -942,7 +942,7 @@ async function start() {
         };
 
         const response = await ai.models.generateContent({
-          model: "gemini-3.5-flash",
+          model: "gemini-2.5-flash",
           contents: { parts: [imagePart, textPart] },
           config: {
             responseMimeType: "application/json",
@@ -1050,10 +1050,18 @@ async function start() {
     }
   ];
 
-  // Get orders API
+  // Get orders API: Allows store owners and merchant staff to view complete customer details for fulfillment
   app.get("/api/orders", (req, res) => {
     logSecurityEvent("INFO", "GET_ORDERS_REQUEST", req);
-    res.json(memoryOrders);
+    const storeId = (req.query.storeId || req.headers["x-store-id"]) as string | undefined;
+
+    let orders = memoryOrders;
+    if (storeId) {
+      orders = orders.filter((o) => o.storeId === storeId);
+    }
+
+    // Return complete customer information so merchants and employees can confirm orders, call clients, and print courier waybills
+    res.json(orders);
   });
 
   // Memory Store for Return Requests
@@ -1079,58 +1087,123 @@ async function start() {
     }
   ];
 
-  // Get returns API
+  // Get returns API: Allows merchant team to process customer returns
   app.get("/api/returns", (req, res) => {
     logSecurityEvent("INFO", "GET_RETURNS_REQUEST", req);
     res.json(memoryReturns);
   });
 
-  // Post returns API
+  // Post returns API with strict validation
   app.post("/api/returns", sensitiveAuthLimiter, (req, res) => {
     logSecurityEvent("INFO", "CREATE_RETURN_REQUEST", req);
     const newReturn = req.body;
     if (!newReturn || typeof newReturn !== "object") {
       return res.status(400).json({ error: "Invalid return request payload." });
     }
-    if (!newReturn.id) newReturn.id = `RET-${Math.floor(10000 + Math.random() * 90000)}`;
-    if (!newReturn.date) newReturn.date = new Date().toISOString();
-    if (!newReturn.status) newReturn.status = "pending";
-    memoryReturns.unshift(newReturn);
-    res.status(201).json(newReturn);
+    if (!newReturn.orderId || typeof newReturn.orderId !== "string") {
+      return res.status(400).json({ error: "orderId is required." });
+    }
+    if (!newReturn.reason || typeof newReturn.reason !== "string") {
+      return res.status(400).json({ error: "Valid return reason is required." });
+    }
+
+    const sanitizedReturn = {
+      ...newReturn,
+      id: newReturn.id || `RET-${Math.floor(10000 + Math.random() * 90000)}`,
+      date: newReturn.date || new Date().toISOString(),
+      status: "pending"
+    };
+
+    memoryReturns.unshift(sanitizedReturn);
+    res.status(201).json(sanitizedReturn);
   });
 
-  // Post orders API (Critical Financial Entry Point with Tarpit Protection)
+  // Helper to validate and sanitize a single order object
+  function validateOrderPayload(order: any): { valid: boolean; error?: string; sanitized?: any } {
+    if (!order || typeof order !== "object") {
+      return { valid: false, error: "Order body must be an object." };
+    }
+    if (!order.shopper || typeof order.shopper !== "object") {
+      return { valid: false, error: "Shopper details are required." };
+    }
+    if (!order.shopper.name || typeof order.shopper.name !== "string" || order.shopper.name.trim().length === 0) {
+      return { valid: false, error: "Shopper name is required." };
+    }
+    if (!order.shopper.phone || typeof order.shopper.phone !== "string" || order.shopper.phone.trim().length === 0) {
+      return { valid: false, error: "Shopper phone number is required." };
+    }
+    if (!Array.isArray(order.items) || order.items.length === 0) {
+      return { valid: false, error: "Order must contain at least one item." };
+    }
+
+    const sanitized = {
+      id: order.id || `ORD-${Math.floor(10000 + Math.random() * 90000)}`,
+      storeId: order.storeId || "store_default",
+      storeName: order.storeName || "Store",
+      date: order.date || new Date().toISOString(),
+      shopper: {
+        name: String(order.shopper.name).slice(0, 120).trim(),
+        email: order.shopper.email ? String(order.shopper.email).slice(0, 120).trim() : "",
+        phone: String(order.shopper.phone).slice(0, 30).trim(),
+        wilaya: String(order.shopper.wilaya || "Alger").slice(0, 60),
+        wilayaCode: String(order.shopper.wilayaCode || "16").slice(0, 10),
+        commune: String(order.shopper.commune || "").slice(0, 60),
+        address: String(order.shopper.address || "").slice(0, 200)
+      },
+      items: order.items.map((item: any) => ({
+        id: String(item.id || `item_${Date.now()}`),
+        name: String(item.name || "Product").slice(0, 150),
+        price: Number(item.price) || 0,
+        quantity: Math.max(1, Math.min(50, Number(item.quantity) || 1)),
+        imageUrl: item.imageUrl ? String(item.imageUrl).slice(0, 500) : ""
+      })),
+      total: Math.max(0, Number(order.total) || 0),
+      shippingCost: Math.max(0, Number(order.shippingCost) || 0),
+      status: "pending",
+      paymentMethod: ["cod", "eddahabia", "cib", "ccp"].includes(order.paymentMethod) ? order.paymentMethod : "cod"
+    };
+
+    return { valid: true, sanitized };
+  }
+
+  // Post orders API (Critical Financial Entry Point with Strict Validation & Tarpit Protection)
   app.post("/api/orders", sensitiveAuthLimiter, (req, res) => {
     logSecurityEvent("INFO", "CREATE_ORDER_REQUEST", req);
     const newObj = req.body;
     if (!newObj) {
       return res.status(400).json({ error: "Order body required." });
     }
+
     if (Array.isArray(newObj)) {
-      newObj.forEach((o) => {
-        if (!o.id) o.id = `ORD-${Math.floor(10000 + Math.random() * 90000)}`;
-        if (!o.date) o.date = new Date().toISOString();
-        if (!o.status) o.status = "pending";
-        memoryOrders.unshift(o);
-      });
-      res.status(201).json(newObj);
+      const sanitizedBatch: any[] = [];
+      for (const item of newObj) {
+        const val = validateOrderPayload(item);
+        if (!val.valid) {
+          return res.status(400).json({ error: val.error });
+        }
+        sanitizedBatch.push(val.sanitized);
+      }
+      sanitizedBatch.forEach((o) => memoryOrders.unshift(o));
+      return res.status(201).json(sanitizedBatch);
     } else {
-      if (!newObj.id) newObj.id = `ORD-${Math.floor(10000 + Math.random() * 90000)}`;
-      if (!newObj.date) newObj.date = new Date().toISOString();
-      if (!newObj.status) newObj.status = "pending";
-      memoryOrders.unshift(newObj);
-      res.status(201).json(newObj);
+      const val = validateOrderPayload(newObj);
+      if (!val.valid) {
+        return res.status(400).json({ error: val.error });
+      }
+      memoryOrders.unshift(val.sanitized);
+      return res.status(201).json(val.sanitized);
     }
   });
 
-  // Update order status API
+  // Update order status API with status transition guards
   app.put("/api/orders/:id/status", sensitiveAuthLimiter, (req, res) => {
     logSecurityEvent("INFO", "UPDATE_ORDER_STATUS_REQUEST", req, { orderId: req.params.id, status: req.body?.status });
     const { id } = req.params;
     const { status } = req.body;
 
-    if (!["pending", "accepted", "shipped", "delivered"].includes(status)) {
-      return res.status(400).json({ error: "Invalid status" });
+    const allowedStatuses = ["pending", "accepted", "shipped", "delivered", "cancelled"];
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ error: `Invalid status. Must be one of: ${allowedStatuses.join(", ")}` });
     }
 
     // Since in-memory grouping is shared, update matching ids
@@ -1460,7 +1533,7 @@ You must return the response strictly as a JSON object matching this schema:
 
         // Use standard generateContent with fallback
         const response = await ai.models.generateContent({
-          model: "gemini-3.5-flash",
+          model: "gemini-2.5-flash",
           contents: { parts: [imagePart, textPart] },
           config: {
             responseMimeType: "application/json",
@@ -1482,7 +1555,7 @@ You must return the response strictly as a JSON object matching this schema:
             success: true,
             altText: parsedResult.altText,
             detailedDescription: parsedResult.detailedDescription,
-            modelUsed: `gemini-3.5-flash (${model}-profile)`,
+            modelUsed: `gemini-2.5-flash (${model}-profile)`,
             simulated: false,
           });
         }

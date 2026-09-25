@@ -2,6 +2,240 @@ import { GrowthCampaign } from "../../types/growthStudio";
 
 export const INITIAL_GROWTH_CAMPAIGNS: GrowthCampaign[] = [
   {
+    id: "camp-tactical-backpack",
+    storeId: "store-1",
+    name: "الحقيبة التكتيكية الذكية 3 في 1 — حملة الدفع عند الاستلام 58 ولاية",
+    product: {
+      id: "prod-tactical-backpack-1",
+      name: "الحقيبة التكتيكية الذكية 3 في 1 المقاومة للماء (سفر • عمل • رياضة)",
+      price: 4800,
+      originalPrice: 6900,
+      imageUrl: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1000&q=80",
+      category: "Bags & Luggage",
+      description: "حقيبة متعددة الاستعمالات، مريحة وقوية، تناسب الدراسة، السفر والرياضة مع حجرة سفلية معزولة للأحذية، جيب مبطن للكمبيوتر المحمول، و3 طرق للارتداء (ظهر، يد، كتف)."
+    },
+    offer: "تخفيض 30% لفترة محدودة + شحن مجاني لكافة الولايات عند طلب حقيبتين أو أكثر مع الدفع عند الاستلام",
+    trafficSources: ["TikTok", "Instagram", "Facebook", "Snapchat", "WhatsApp"],
+    goal: "purchases",
+    status: "active",
+    createdAt: "2026-09-05T10:00:00Z",
+    updatedAt: "2026-09-17T09:30:00Z",
+    distributionMode: "smart",
+    distributionRationale: "Landing Page 01 (Tactical 3-in-1 Flagship) achieves 14.2% conversion rate driven by high engagement with 3-way wear mode and Algerian WhatsApp chat screenshots.",
+    smartLinkSlug: "sac-tactique-3en1-algerie",
+    settings: {
+      confidenceThreshold: 150,
+      autoOptimize: true,
+      pixelTracking: true
+    },
+    landingPages: [
+      {
+        id: "lp-tactical-01",
+        campaignId: "camp-tactical-backpack",
+        name: "صفحة الهبوط الرئيسية — الحقيبة التكتيكية 3 في 1 (COD الجزائر)",
+        status: "active",
+        strategyFocus: "benefits",
+        trafficAllocation: 70,
+        suggestedAllocation: 75,
+        language: "ar",
+        currency: "DA",
+        market: "Algeria",
+        theme: {
+          primaryColor: "#2563EB",
+          accentColor: "#0284C7",
+          secondaryColor: "#38BDF8",
+          backgroundColor: "#F8FAFC",
+          cardBackgroundColor: "#FFFFFF",
+          textColor: "#0F172A",
+          fontFamily: "'Cairo', 'Tajawal', sans-serif",
+          buttonStyle: "pill",
+          badgeText: "ضد الماء 💧 • شحن سريع • ضمان الاسترجاع",
+          backgroundStyle: "gradient",
+          backgroundGradient: "linear-gradient(180deg, #F0F7FF 0%, #FFFFFF 35%, #F8FAFC 100%)",
+          buttonColor: "#2563EB",
+          buttonTextColor: "#FFFFFF"
+        },
+        metrics: {
+          visitors: 4820,
+          uniqueVisitors: 4120,
+          sessions: 5200,
+          pageViews: 7900,
+          addToCart: 890,
+          checkoutStarted: 740,
+          conversions: 684,
+          revenue: 3283200,
+          averageOrderValue: 4800
+        },
+        sourceBreakdown: {
+          TikTok: { visitors: 2600, conversions: 390, revenue: 1872000 },
+          Instagram: { visitors: 1300, conversions: 180, revenue: 864000 },
+          Facebook: { visitors: 920, conversions: 114, revenue: 547200 }
+        },
+        deviceBreakdown: {
+          mobile: { visitors: 4400, conversions: 630, revenue: 3024000 },
+          desktop: { visitors: 420, conversions: 54, revenue: 259200 },
+          tablet: { visitors: 0, conversions: 0, revenue: 0 }
+        },
+        sections: [
+          {
+            id: "sec-bag-hero",
+            type: "hero",
+            visible: true,
+            headline: "تنظيم، حماية، راحة... في حقيبة واحدة",
+            subheadline: "حقيبة متعددة الاستعمالات، مريحة وقوية، تناسب الدراسة، السفر والرياضة",
+            badge: "ضد الماء 💧 • شحن سريع لكافة الولايات • فحص الطرد قبل الدفع",
+            imageUrl: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1000&q=80",
+            ctaText: "اطلب الآن - توصيل سريع لباب منزلك",
+            ctaSubtext: "الدفع عند الاستلام مع المعاينة قبل السداد",
+            price: 4800,
+            originalPrice: 6900,
+            customData: {
+              dimensions: { height: "48 cm", width: "28 cm", depth: "18 cm" },
+              featureTags: [
+                { icon: "Footprints", label: "حذاءك في أمان", sub: "حجرة معزولة بفتحات تهوية" },
+                { icon: "Sparkles", label: "تصميم أنيق و عملي", sub: "تناسب الدراسة، السفر والجيم" },
+                { icon: "Droplets", label: "مقاومة الماء", sub: "قماش أكسفورد العازل للأمطار" }
+              ]
+            }
+          },
+          {
+            id: "sec-bag-smart-space",
+            type: "smart_compartments",
+            visible: true,
+            headline: "مساحة مصممة بذكاء",
+            subheadline: "كيما شفت...! رانا خمنا فيك ودرنا لكل حاجة مكانها",
+            badge: "تقسيم احترافي 100%",
+            imageUrl: "https://images.unsplash.com/photo-1581605405669-fcdf81165afa?w=800&q=80",
+            items: [
+              { title: "حجرة معزولة خاصة بالأحذية", description: "حجرة سفلية معزولة تماماً تمنع اتساخ الملابس أو انتشار الروائح، مزودة بفتحات تهوية ذكية." },
+              { title: "جيب مبطن لحماية الحاسوب المحمول", description: "مبطن بطبقة سميكة ممتصة للصدمات لحماية اللابتوب حتى 15.6 بوصة والآيباد من أي صدمة." },
+              { title: "منفذ USB ذكي للشحن السريع", description: "اشحن هاتفك بسهولة أثناء المشي أو التنقل بالقطار والحافلة دون الحاجة لفتح الحقيبة." },
+              { title: "جيب سري خلفي مضاد للسرقة", description: "ملاصق لظهرك لحفظ جواز السفر، المحفظة، والنقود بأمان تام في الأماكن المزدحمة." }
+            ]
+          },
+          {
+            id: "sec-bag-versatility",
+            type: "versatility_3in1",
+            visible: true,
+            headline: "3 طرق للاستخدام في حقيبة واحدة",
+            subheadline: "تنقل بحرية تامة واختر الوضعية المناسبة حسب يومك ومشوارك:",
+            badge: "مرونة كاملة 3 في 1",
+            items: [
+              { title: "حقيبة ظهر (Sac à dos)", description: "دراسة • تنقل يومي • مشي ودراجة", badge: "مثالية للمشي والجامعة" },
+              { title: "محمولة في اليد (Sac à main)", description: "سريع • عمل واجتماعات • خفيف وأنيق", badge: "مظهر رسمي واحترافي" },
+              { title: "حقيبة الكتف (Sac bandoulière)", description: "سفر • تنقل طويل • رياضة وجيم", badge: "راحة وسرعة حركة" }
+            ]
+          },
+          {
+            id: "sec-bag-durability",
+            type: "durability",
+            visible: true,
+            headline: "مصممة لتدوم سنوات",
+            subheadline: "صنعت من أجود خامات أكسفورد المقاومة للماء والتمزق مع سحابات معدنية مزدوجة شديدة التحمل",
+            badge: "خامات عالية الجودة",
+            items: [
+              { title: "قماش عازل للماء والرطوبة", description: "قطرات الماء تنزلق مباشرة ولا تخترق القماش، ما يحمي أجهزتك وملابسك في أصعب الظروف الجوية." },
+              { title: "سحابات فولاذية مزدوجة", description: "مصنوعة من الفولاذ المقاوم للصدأ ومجربة لأكثر من 50,000 حركة فتح وإغلاق سلسة." },
+              { title: "خياطة مدعمة وأحزمة مريحة", description: "أحزمة كتف إسفنجية قابلة للتعديل تمتص الصدمات وتوزع الوزن بتوازن على العمود الفقري." },
+              { title: "شريط خلفي للتثبيت على حقيبة السفر", description: "ثبت الحقيبة على مقبض فاليزة السفر لتتنقل في المطار والمحطات بكل راحة وسهولة." }
+            ]
+          },
+          {
+            id: "sec-bag-lifestyle",
+            type: "lifestyle",
+            visible: true,
+            headline: "لكل يوم ولكل مشوار",
+            subheadline: "تصميم متكامل يلبي كافة نشاطاتك اليومية دون الحاجة لشراء حقائب منفصلة",
+            badge: "رفيقك اليومي",
+            items: [
+              { title: "للسفر والتنقل", description: "السفر بالسيارة أو الحافلة، متوافقة مع شروط كابينة الطائرة (Cabin Bag)، والخدمة الوطنية." },
+              { title: "الرياضة والأنشطة", description: "الجيم، كمال الأجسام، السباحة، الكامبينغ والتخييم في الطبيعة." },
+              { title: "العمل والإقامة الجامعية", description: "سعة ممتازة للدفاتر، الكتب، اللابتوب، الشواحن، والملفات دون أي فوضى." }
+            ]
+          },
+          {
+            id: "sec-bag-reviews",
+            type: "chat_reviews",
+            visible: true,
+            headline: "آراء زبائننا!",
+            subheadline: "أكثر من 2,410 مشتري موثق في الجزائر يثقون بجودتنا وخدمتنا",
+            badge: "تقييم 4.9/5 ⭐",
+            items: [
+              {
+                author: "أبو إدريس",
+                authorLocation: "الجزائر العاصمة",
+                title: "رسالة واتساب موثقة",
+                description: "الله يبارك ما شاء الله شريتها.. كاليتي بزاف شابة وتستاهل كل دينار، وسعر مناسب جدا ربي يبارك فيكم ويزيدكم.",
+                rating: 5,
+                avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80"
+              },
+              {
+                author: "كريم ش",
+                authorLocation: "وهران",
+                title: "تعليق فيسبوك موثق",
+                description: "السلام عليكم، وصلني الساك جزاكم الله خيرا كالعادة خدمة في القمة ما يندمش لي شراه.. السحابات والخامة ممتازة.",
+                rating: 5,
+                avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100&q=80"
+              },
+              {
+                author: "نوال بن تواتي",
+                authorLocation: "قسنطينة",
+                title: "مشتري موثق عبر ماسنجر",
+                description: "لحقتني الحقيبة sac à dos ما شاء الله كاليتي قوية ومعاملة ربي يبارك وتوصيل في 24 ساعة للدار.",
+                rating: 5,
+                avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80"
+              },
+              {
+                author: "عمر ق",
+                authorLocation: "سطيف",
+                title: "رسالة واتساب موثقة",
+                description: "استلمت الحقيبة وعاينتها قدام ليفرور قبل ما نخلص.. حجرة السباط وحدها واللابتوب محمي مليح، هايلة بزاف للجيم والخدمة.",
+                rating: 5,
+                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80"
+              }
+            ]
+          },
+          {
+            id: "sec-bag-trust",
+            type: "trust_services",
+            visible: true,
+            headline: "تسوق بكل راحة وأمان",
+            subheadline: "نحن نضع رضا زبائننا في المقام الأول",
+            items: [
+              {
+                title: "خدمة العملاء",
+                description: "نحن في متجرنا نضع رضا عملائنا في مقدمة أولوياتنا ونعمل على تقديم تجربة شراء سهلة وآمنة، مع دعم متواصل قبل وبعد الطلب."
+              },
+              {
+                title: "الدفع عند الاستلام",
+                description: "نوفر لك خدمة الدفع عند الاستلام (Cash on Delivery) لتجعل تجربة الشراء سهلة وآمنة مع المعاينة وفحص الطرد قبل دفع أي دينار."
+              },
+              {
+                title: "الضمان وسياسة الاسترجاع",
+                description: "ضمان الجودة مع إمكانية الاستبدال الفوري المجاني في حالة وجود أي ملاحظة خلال 48 ساعة من الاستلام."
+              }
+            ]
+          },
+          {
+            id: "sec-bag-cta",
+            type: "cta",
+            visible: true,
+            headline: "سارع بطلب حقيبتك الآن قبل نفاد المخزون",
+            subheadline: "عرض خاص: توصيل مجاني لباب منزلك عند طلب حقيبتين (لك ولصديقك أو لأخيك)",
+            ctaText: "اضغط هنا لتأكيد طلبك — الدفع عند الاستلام مع المعاينة",
+            ctaSubtext: "توصيل سريع لكافة 58 ولاية • فحص الطرد أمام عامل التوصيل"
+          },
+          {
+            id: "sec-bag-footer",
+            type: "footer",
+            visible: true,
+            headline: "جميع الحقوق محفوظة © الحقيبة التكتيكية الذكية 3 في 1 • متجر يومي Yume"
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: "camp-trading-ebook",
     storeId: "store-1",
     name: "Arabic Trading E-Book Campaign — خطواتك الأولى للربح في التداول",

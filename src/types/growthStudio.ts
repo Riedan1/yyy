@@ -84,6 +84,7 @@ export interface LandingPageSection {
     authorLocation?: string;
     avatar?: string;
     highlight?: boolean;
+    badge?: string;
   }>;
   customData?: Record<string, any>;
 }
@@ -152,9 +153,14 @@ export interface GrowthCampaign {
     price: number;
     originalPrice?: number;
     imageUrl: string;
+    images?: string[];
     category?: string;
     description?: string;
     sku?: string;
+    smartTags?: string[];
+    maxQuantity?: number;
+    allowHomeDelivery?: boolean;
+    allowOfficeDelivery?: boolean;
   };
   offer: string;
   trafficSources: TrafficSourceType[];

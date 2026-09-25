@@ -23,7 +23,16 @@ import {
   BookOpen,
   TrendingUp,
   Award,
-  FileText
+  FileText,
+  Footprints,
+  Droplets,
+  Backpack,
+  Briefcase,
+  Luggage,
+  Laptop,
+  Zap,
+  MessageCircle,
+  CheckCheck
 } from "lucide-react";
 import { GrowthCampaign, GrowthLandingPage } from "../../types/growthStudio";
 
@@ -326,7 +335,25 @@ export const PublicGrowthLandingPage: React.FC<PublicGrowthLandingPageProps> = (
                   </p>
                 )}
 
-                {/* Hero Media */}
+                {/* Feature Tags Bar (Image 1 style) */}
+                {section.customData?.featureTags && (
+                  <div className="flex flex-wrap items-center justify-center gap-2 max-w-md mx-auto pt-1">
+                    {section.customData.featureTags.map((tag: any, tIdx: number) => (
+                      <div 
+                        key={tIdx} 
+                        style={{ backgroundColor: cardBg }}
+                        className={`px-3 py-1.5 rounded-full border ${cardBorder} shadow-xs flex items-center gap-1.5 text-xs font-bold`}
+                      >
+                        <span className="text-blue-500">
+                          {tag.icon === "Footprints" ? <Footprints className="w-3.5 h-3.5" /> : tag.icon === "Droplets" ? <Droplets className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" />}
+                        </span>
+                        <span style={{ color: textColor }}>{tag.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Hero Media with Dimensional Measurement Indicators (Image 1) */}
                 {section.imageUrl && (
                   <div className={`rounded-3xl overflow-hidden shadow-2xl aspect-4/3 max-w-md mx-auto border ${cardBorder} relative group`}>
                     <img 
@@ -335,7 +362,39 @@ export const PublicGrowthLandingPage: React.FC<PublicGrowthLandingPageProps> = (
                       className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
                       referrerPolicy="no-referrer"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+
+                    {/* Dimensions Overlay Lines (Image 1 style) */}
+                    {section.customData?.dimensions && (
+                      <>
+                        {/* Height Dimension (Left) */}
+                        <div className="absolute left-2.5 top-5 bottom-5 flex flex-col items-center justify-between pointer-events-none">
+                          <div className="w-2.5 h-[1.5px] bg-white shadow-xs" />
+                          <div className="h-full w-[1.5px] bg-white/80 relative flex items-center justify-center">
+                            <span className="bg-blue-600 text-white font-mono text-[9px] font-black px-1.5 py-0.5 rounded shadow-md -rotate-90 whitespace-nowrap">
+                              {section.customData.dimensions.height || "48 cm"}
+                            </span>
+                          </div>
+                          <div className="w-2.5 h-[1.5px] bg-white shadow-xs" />
+                        </div>
+
+                        {/* Width Dimension (Bottom) */}
+                        <div className="absolute bottom-2.5 left-8 right-8 flex items-center justify-between pointer-events-none">
+                          <div className="h-2.5 w-[1.5px] bg-white shadow-xs" />
+                          <div className="w-full h-[1.5px] bg-white/80 relative flex items-center justify-center">
+                            <span className="bg-blue-600 text-white font-mono text-[9px] font-black px-2 py-0.5 rounded shadow-md whitespace-nowrap">
+                              {section.customData.dimensions.width || "28 cm"}
+                            </span>
+                          </div>
+                          <div className="h-2.5 w-[1.5px] bg-white shadow-xs" />
+                        </div>
+
+                        {/* Depth Badge (Top Right) */}
+                        <div className="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded-full border border-white/20 shadow-sm flex items-center gap-1">
+                          <span>العمق: {section.customData.dimensions.depth || "18 cm"}</span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
 
@@ -767,6 +826,373 @@ export const PublicGrowthLandingPage: React.FC<PublicGrowthLandingPageProps> = (
               </div>
             )}
 
+            {/* SMART COMPARTMENTS (مساحة مصممة بذكاء) */}
+            {section.type === "smart_compartments" && (
+              <div 
+                style={{ backgroundColor: cardBg }}
+                className={`p-5 sm:p-7 rounded-3xl border ${cardBorder} shadow-md space-y-5 text-center`}
+              >
+                {section.badge && (
+                  <span 
+                    className="inline-block px-3 py-1 rounded-full text-xs font-black tracking-wide border"
+                    style={{ 
+                      backgroundColor: `${theme.accentColor}18`, 
+                      color: theme.accentColor,
+                      borderColor: `${theme.accentColor}30`
+                    }}
+                  >
+                    {section.badge}
+                  </span>
+                )}
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-black" style={{ color: textColor }}>
+                    {section.headline}
+                  </h2>
+                  {section.subheadline && (
+                    <p className="text-sm font-bold mt-1.5 text-blue-600 dark:text-blue-400">
+                      {section.subheadline}
+                    </p>
+                  )}
+                </div>
+
+                {section.imageUrl && (
+                  <div className={`rounded-2xl overflow-hidden shadow-lg border ${cardBorder} aspect-video max-w-lg mx-auto relative`}>
+                    <img 
+                      src={section.imageUrl} 
+                      alt={section.headline} 
+                      className="w-full h-full object-cover" 
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-4">
+                      <span className="text-white text-xs font-bold bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
+                        👟 حجرة أحذية معزولة بفتحات تهوية + جيب لابتوب مبطن
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-right">
+                  {section.items?.map((item, idx) => (
+                    <div 
+                      key={idx} 
+                      className={`p-4 rounded-2xl border ${cardBorder} flex items-start gap-3 transition-all hover:border-blue-400`}
+                      style={{ backgroundColor: isDarkTheme ? "rgba(255,255,255,0.03)" : "#f8fafc" }}
+                    >
+                      <div 
+                        className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 shadow-xs mt-0.5 text-blue-600 bg-blue-50 border border-blue-200 dark:bg-blue-900/40 dark:border-blue-800"
+                      >
+                        {idx === 0 ? <Footprints className="w-5 h-5" /> : idx === 1 ? <Laptop className="w-5 h-5" /> : idx === 2 ? <Zap className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
+                      </div>
+                      <div className="space-y-1 min-w-0">
+                        <h4 className="text-xs sm:text-sm font-black" style={{ color: textColor }}>{item.title}</h4>
+                        <p className="text-[11px] sm:text-xs leading-relaxed" style={{ color: mutedTextColor }}>{item.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 3-IN-1 VERSATILITY (3 طرق للاستخدام في حقيبة واحدة) */}
+            {section.type === "versatility_3in1" && (
+              <div 
+                style={{ backgroundColor: cardBg }}
+                className={`p-5 sm:p-7 rounded-3xl border ${cardBorder} shadow-md space-y-5 text-center`}
+              >
+                {section.badge && (
+                  <span 
+                    className="inline-block px-3 py-1 rounded-full text-xs font-black tracking-wide border"
+                    style={{ 
+                      backgroundColor: `${theme.accentColor}18`, 
+                      color: theme.accentColor,
+                      borderColor: `${theme.accentColor}30`
+                    }}
+                  >
+                    {section.badge}
+                  </span>
+                )}
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-black" style={{ color: textColor }}>
+                    {section.headline}
+                  </h2>
+                  {section.subheadline && (
+                    <p className="text-xs sm:text-sm leading-relaxed max-w-md mx-auto mt-1" style={{ color: mutedTextColor }}>
+                      {section.subheadline}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+                  {section.items?.map((item, idx) => (
+                    <div 
+                      key={idx}
+                      className={`p-5 rounded-2xl border ${cardBorder} text-center space-y-3 transition-transform hover:-translate-y-1 shadow-sm relative group`}
+                      style={{ backgroundColor: isDarkTheme ? "rgba(255,255,255,0.03)" : "#f8fafc" }}
+                    >
+                      <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center mx-auto shadow-md shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                        {idx === 0 ? <Backpack className="w-6 h-6" /> : idx === 1 ? <Briefcase className="w-6 h-6" /> : <Luggage className="w-6 h-6" />}
+                      </div>
+                      <div>
+                        <span className="inline-block text-[10px] font-bold text-blue-600 bg-blue-100 dark:bg-blue-900/60 dark:text-blue-300 px-2 py-0.5 rounded-full mb-1">
+                          الوضعية {idx + 1}
+                        </span>
+                        <h4 className="text-sm font-black" style={{ color: textColor }}>{item.title}</h4>
+                      </div>
+                      <p className="text-xs leading-relaxed" style={{ color: mutedTextColor }}>{item.description}</p>
+                      {item.badge && (
+                        <div className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 py-1 px-2.5 rounded-lg border border-emerald-200 dark:border-emerald-800/60">
+                          {item.badge}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* DURABILITY & MATERIALS (مصممة لتدوم) */}
+            {section.type === "durability" && (
+              <div 
+                style={{ backgroundColor: cardBg }}
+                className={`p-5 sm:p-7 rounded-3xl border ${cardBorder} shadow-md space-y-5 text-center`}
+              >
+                {section.badge && (
+                  <span 
+                    className="inline-block px-3 py-1 rounded-full text-xs font-black tracking-wide border"
+                    style={{ 
+                      backgroundColor: `${theme.accentColor}18`, 
+                      color: theme.accentColor,
+                      borderColor: `${theme.accentColor}30`
+                    }}
+                  >
+                    {section.badge}
+                  </span>
+                )}
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-black" style={{ color: textColor }}>
+                    {section.headline}
+                  </h2>
+                  {section.subheadline && (
+                    <p className="text-xs sm:text-sm leading-relaxed max-w-md mx-auto mt-1" style={{ color: mutedTextColor }}>
+                      {section.subheadline}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-right">
+                  {section.items?.map((item, idx) => (
+                    <div 
+                      key={idx}
+                      className={`p-4 rounded-2xl border ${cardBorder} space-y-1.5`}
+                      style={{ backgroundColor: isDarkTheme ? "rgba(255,255,255,0.03)" : "#f8fafc" }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                        <h4 className="text-xs sm:text-sm font-bold" style={{ color: textColor }}>{item.title}</h4>
+                      </div>
+                      <p className="text-[11px] sm:text-xs leading-relaxed pr-6" style={{ color: mutedTextColor }}>
+                        {item.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* LIFESTYLE & MULTI-OCCASIONS (لكل يوم ولكل مشوار) */}
+            {section.type === "lifestyle" && (
+              <div 
+                style={{ backgroundColor: cardBg }}
+                className={`p-5 sm:p-7 rounded-3xl border ${cardBorder} shadow-md space-y-5 text-center`}
+              >
+                {section.badge && (
+                  <span 
+                    className="inline-block px-3 py-1 rounded-full text-xs font-black tracking-wide border"
+                    style={{ 
+                      backgroundColor: `${theme.accentColor}18`, 
+                      color: theme.accentColor,
+                      borderColor: `${theme.accentColor}30`
+                    }}
+                  >
+                    {section.badge}
+                  </span>
+                )}
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-black" style={{ color: textColor }}>
+                    {section.headline}
+                  </h2>
+                  {section.subheadline && (
+                    <p className="text-xs sm:text-sm leading-relaxed max-w-md mx-auto mt-1" style={{ color: mutedTextColor }}>
+                      {section.subheadline}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-right">
+                  {section.items?.map((item, idx) => (
+                    <div 
+                      key={idx}
+                      className={`p-5 rounded-2xl border ${cardBorder} space-y-2`}
+                      style={{ backgroundColor: isDarkTheme ? "rgba(255,255,255,0.03)" : "#f8fafc" }}
+                    >
+                      <div className="text-3xl">
+                        {idx === 0 ? "✈️" : idx === 1 ? "🏋️‍♂️" : "🎓"}
+                      </div>
+                      <h4 className="text-xs sm:text-sm font-black" style={{ color: textColor }}>
+                        {item.title}
+                      </h4>
+                      <p className="text-[11px] sm:text-xs leading-relaxed" style={{ color: mutedTextColor }}>
+                        {item.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* AUTHENTIC CHAT REVIEWS & SOCIAL PROOF (آراء زبائننا!) */}
+            {section.type === "chat_reviews" && (
+              <div 
+                style={{ backgroundColor: cardBg }}
+                className={`p-5 sm:p-7 rounded-3xl border ${cardBorder} shadow-md space-y-5`}
+              >
+                <div className="text-center space-y-1.5">
+                  <div className="flex items-center justify-center gap-1 text-amber-400">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star key={s} className="w-4 h-4 fill-amber-400" />
+                    ))}
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-black" style={{ color: textColor }}>
+                    {section.headline}
+                  </h2>
+                  {section.subheadline && (
+                    <p className="text-xs sm:text-sm" style={{ color: mutedTextColor }}>
+                      {section.subheadline}
+                    </p>
+                  )}
+                </div>
+
+                {/* WhatsApp & Social Media Screenshot Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+                  {section.items?.map((rev, idx) => (
+                    <div 
+                      key={idx}
+                      className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-2 text-right relative overflow-hidden"
+                    >
+                      {/* Top Bar simulating WhatsApp/Messenger header */}
+                      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                        <div className="flex items-center gap-2">
+                          <img 
+                            src={rev.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80"} 
+                            alt={rev.author} 
+                            className="w-7 h-7 rounded-full object-cover border border-emerald-500"
+                            referrerPolicy="no-referrer"
+                          />
+                          <div>
+                            <span className="text-xs font-black block text-slate-900 dark:text-white leading-tight">
+                              {rev.author}
+                            </span>
+                            <span className="text-[10px] text-slate-400">
+                              {rev.authorLocation || "الجزائر"}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                          <CheckCheck className="w-3 h-3 text-emerald-500" />
+                          <span>{rev.title || "مشتري موثق"}</span>
+                        </div>
+                      </div>
+
+                      {/* Chat message bubble in Algerian Arabic */}
+                      <div className="p-3 rounded-2xl bg-[#E7F8E8] dark:bg-emerald-950/40 text-slate-800 dark:text-emerald-100 text-xs sm:text-sm leading-relaxed border border-emerald-100 dark:border-emerald-900/40">
+                        "{rev.description}"
+                        <div className="text-[10px] text-slate-400 dark:text-slate-500 text-left mt-1 flex items-center justify-end gap-1">
+                          <span>11:42</span>
+                          <CheckCheck className="w-3 h-3 text-blue-500" />
+                        </div>
+                      </div>
+
+                      {/* Stars */}
+                      <div className="flex items-center gap-1 text-amber-400 text-xs pt-0.5">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <Star key={s} className="w-3 h-3 fill-amber-400" />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Customer Photo Gallery of Delivered Backpack */}
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2 text-center">
+                  <span className="text-xs font-bold block" style={{ color: textColor }}>
+                    📸 صور واقعية لطرود استلمها زبائننا في مختلف الولايات:
+                  </span>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="rounded-xl overflow-hidden aspect-square border border-slate-200 dark:border-slate-800 shadow-2xs">
+                      <img 
+                        src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&q=80" 
+                        alt="طرد مستلم" 
+                        className="w-full h-full object-cover" 
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    <div className="rounded-xl overflow-hidden aspect-square border border-slate-200 dark:border-slate-800 shadow-2xs">
+                      <img 
+                        src="https://images.unsplash.com/photo-1546938576-6e6a64f317cc?w=400&q=80" 
+                        alt="طرد مستلم" 
+                        className="w-full h-full object-cover" 
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    <div className="rounded-xl overflow-hidden aspect-square border border-slate-200 dark:border-slate-800 shadow-2xs">
+                      <img 
+                        src="https://images.unsplash.com/photo-1581605405669-fcdf81165afa?w=400&q=80" 
+                        alt="طرد مستلم" 
+                        className="w-full h-full object-cover" 
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TRUST & SERVICE POLICIES */}
+            {section.type === "trust_services" && (
+              <div 
+                style={{ backgroundColor: cardBg }}
+                className={`p-5 sm:p-7 rounded-3xl border ${cardBorder} shadow-md space-y-4 text-center`}
+              >
+                <h2 className="text-xl sm:text-2xl font-black" style={{ color: textColor }}>
+                  {section.headline}
+                </h2>
+                {section.subheadline && (
+                  <p className="text-xs sm:text-sm" style={{ color: mutedTextColor }}>{section.subheadline}</p>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 pt-2 text-right">
+                  {section.items?.map((item, idx) => (
+                    <div 
+                      key={idx}
+                      className={`p-4 rounded-2xl border ${cardBorder} space-y-2`}
+                      style={{ backgroundColor: isDarkTheme ? "rgba(255,255,255,0.03)" : "#f8fafc" }}
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-300 flex items-center justify-center">
+                        {idx === 0 ? <Phone className="w-5 h-5" /> : idx === 1 ? <Truck className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />}
+                      </div>
+                      <h4 className="text-sm font-black" style={{ color: textColor }}>
+                        {item.title}
+                      </h4>
+                      <p className="text-xs leading-relaxed" style={{ color: mutedTextColor }}>
+                        {item.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* CLOSING CTA BANNER */}
             {section.type === "cta" && (
               <div 
@@ -994,13 +1420,13 @@ export const PublicGrowthLandingPage: React.FC<PublicGrowthLandingPageProps> = (
         >
           <div className="text-center space-y-2 pb-2 border-b border-slate-100">
             <span className="text-[11px] font-mono font-black uppercase text-indigo-600 tracking-wider">
-              Cash on Delivery (COD) Checkout
+              {isArabicPage ? "استمارة الطلب بالدفع عند الاستلام (COD)" : "Cash on Delivery (COD) Checkout"}
             </span>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900">
-              Confirm Your Delivery Details
+              {isArabicPage ? "أدخل معلوماتك وسنتصل بك لتأكيد طلبك قبل الشحن" : "Confirm Your Delivery Details"}
             </h2>
             <p className="text-xs text-slate-500 max-w-sm mx-auto">
-              Pay in cash only after inspecting your parcel at your doorstep. Zero risk guaranteed.
+              {isArabicPage ? "الدفع نقداً بعد فحص الطرد أمام عامل التوصيل لباب منزلك. بدون أي مخاطرة." : "Pay in cash only after inspecting your parcel at your doorstep. Zero risk guaranteed."}
             </p>
           </div>
 
@@ -1010,13 +1436,17 @@ export const PublicGrowthLandingPage: React.FC<PublicGrowthLandingPageProps> = (
                 <Check className="w-6 h-6 stroke-[3]" />
               </div>
               <h3 className="text-lg font-black text-emerald-950">
-                Order Registered Successfully!
+                {isArabicPage ? "تم تسجيل طلبك بنجاح!" : "Order Registered Successfully!"}
               </h3>
               <p className="text-xs text-emerald-800 leading-relaxed max-w-xs mx-auto">
-                Thank you, <strong>{customerName}</strong>. Our customer care team will call you at <strong>{customerPhone}</strong> within 30 minutes to confirm dispatch to {customerWilaya}.
+                {isArabicPage ? (
+                  <>شكراً لك، <strong>{customerName}</strong>. سيتصل بك فريق خدمة العملاء على الرقم <strong>{customerPhone}</strong> لتأكيد الإرسال إلى {customerWilaya}.</>
+                ) : (
+                  <>Thank you, <strong>{customerName}</strong>. Our customer care team will call you at <strong>{customerPhone}</strong> within 30 minutes to confirm dispatch to {customerWilaya}.</>
+                )}
               </p>
               <div className="p-3 rounded-xl bg-white border border-emerald-200 text-xs font-mono text-emerald-900 font-bold">
-                Order Total: {totalPrice.toLocaleString()} {currency} (Pay on Delivery)
+                {isArabicPage ? "المجموع المستحق:" : "Order Total:"} {totalPrice.toLocaleString()} {currency} ({isArabicPage ? "الدفع عند الاستلام" : "Pay on Delivery"})
               </div>
             </div>
           ) : (
@@ -1025,9 +1455,9 @@ export const PublicGrowthLandingPage: React.FC<PublicGrowthLandingPageProps> = (
               {/* Selected Variant Summary Pill */}
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
                 <div>
-                  <span className="text-slate-500 block text-[11px]">Selected Item:</span>
+                  <span className="text-slate-500 block text-[11px]">{isArabicPage ? "المنتج المختار:" : "Selected Item:"}</span>
                   <span className="font-bold text-slate-900">
-                    {campaign.product.name} ({selectedColor} • {selectedSize || "Standard"})
+                    {campaign.product.name} ({selectedColor} • {selectedSize || (isArabicPage ? "الحجم القياسي" : "Standard")})
                   </span>
                 </div>
                 <span className="font-mono font-bold text-indigo-600">
@@ -1038,7 +1468,7 @@ export const PublicGrowthLandingPage: React.FC<PublicGrowthLandingPageProps> = (
               {/* Quantity Selector */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1">
-                  Quantity:
+                  {isArabicPage ? "الكمية / العرض:" : "Quantity:"}
                 </label>
                 <div className="flex items-center gap-3">
                   {[1, 2, 3, 4].map((q) => (
@@ -1052,10 +1482,10 @@ export const PublicGrowthLandingPage: React.FC<PublicGrowthLandingPageProps> = (
                           : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
                       }`}
                     >
-                      {q} {q > 1 ? "Units" : "Unit"}
+                      {isArabicPage ? `${q} ${q > 1 ? "قطع" : "قطعة"}` : `${q} ${q > 1 ? "Units" : "Unit"}`}
                       {q >= 2 && (
                         <span className="block text-[9px] font-bold text-emerald-600 mt-0.5">
-                          Free Shipping
+                          {isArabicPage ? "توصيل مجاني 🎁" : "Free Shipping"}
                         </span>
                       )}
                     </button>
@@ -1066,12 +1496,12 @@ export const PublicGrowthLandingPage: React.FC<PublicGrowthLandingPageProps> = (
               {/* Customer Full Name */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1">
-                  Full Name *
+                  {isArabicPage ? "الاسم واللقب *" : "Full Name *"}
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g., Mohamed Amine"
+                  placeholder={isArabicPage ? "مثال: أمين بن عيسى" : "e.g., Mohamed Amine"}
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   className="w-full text-xs px-3.5 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
@@ -1081,17 +1511,17 @@ export const PublicGrowthLandingPage: React.FC<PublicGrowthLandingPageProps> = (
               {/* Customer Phone Number */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1">
-                  Phone Number (For Delivery Confirmation) *
+                  {isArabicPage ? "رقم الهاتف (سنتصل بك لتأكيد طلبك قبل الشحن) *" : "Phone Number (For Delivery Confirmation) *"}
                 </label>
                 <div className="relative">
-                  <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                  <Phone className={`w-4 h-4 text-slate-400 absolute ${isArabicPage ? "right-3.5" : "left-3.5"} top-3.5`} />
                   <input
                     type="tel"
                     required
                     placeholder="05 / 06 / 07 XX XX XX XX"
                     value={customerPhone}
                     onChange={(e) => setCustomerPhone(e.target.value)}
-                    className="w-full text-xs pl-10 pr-3.5 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                    className={`w-full text-xs ${isArabicPage ? "pr-10 pl-3.5" : "pl-10 pr-3.5"} py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none`}
                   />
                 </div>
               </div>
@@ -1099,14 +1529,14 @@ export const PublicGrowthLandingPage: React.FC<PublicGrowthLandingPageProps> = (
               {/* Customer Wilaya Dropdown */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1">
-                  Province (Wilaya) *
+                  {isArabicPage ? "الولاية *" : "Province (Wilaya) *"}
                 </label>
                 <div className="relative">
-                  <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                  <MapPin className={`w-4 h-4 text-slate-400 absolute ${isArabicPage ? "right-3.5" : "left-3.5"} top-3.5`} />
                   <select
                     value={customerWilaya}
                     onChange={(e) => setCustomerWilaya(e.target.value)}
-                    className="w-full text-xs pl-10 pr-8 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none appearance-none cursor-pointer"
+                    className={`w-full text-xs ${isArabicPage ? "pr-10 pl-8" : "pl-10 pr-8"} py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none appearance-none cursor-pointer`}
                   >
                     {ALGERIAN_WILAYAS.map((w) => (
                       <option key={w} value={w}>
@@ -1114,18 +1544,18 @@ export const PublicGrowthLandingPage: React.FC<PublicGrowthLandingPageProps> = (
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-3.5 pointer-events-none" />
+                  <ChevronDown className={`w-4 h-4 text-slate-400 absolute ${isArabicPage ? "left-3" : "right-3"} top-3.5 pointer-events-none`} />
                 </div>
               </div>
 
               {/* Customer Delivery Address */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1">
-                  Delivery Address / Municipality
+                  {isArabicPage ? "البلدية والعنوان بالتفصيل *" : "Delivery Address / Municipality"}
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g., District name, street, or landmark"
+                  placeholder={isArabicPage ? "مثال: بلدية الأبيار، حي النصر عمارة 4" : "e.g., District name, street, or landmark"}
                   value={customerAddress}
                   onChange={(e) => setCustomerAddress(e.target.value)}
                   className="w-full text-xs px-3.5 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
@@ -1135,21 +1565,21 @@ export const PublicGrowthLandingPage: React.FC<PublicGrowthLandingPageProps> = (
               {/* Order Summary & Pricing Calculation */}
               <div className="p-3.5 rounded-2xl bg-slate-100 text-xs space-y-1.5 border border-slate-200">
                 <div className="flex justify-between text-slate-600">
-                  <span>Item Subtotal ({quantity} unit{quantity > 1 ? "s" : ""}):</span>
+                  <span>{isArabicPage ? `سعر المنتج (${quantity} قطعة):` : `Item Subtotal (${quantity} unit${quantity > 1 ? "s" : ""}):`}</span>
                   <span className="font-mono font-bold">{(basePrice * quantity).toLocaleString()} {currency}</span>
                 </div>
                 <div className="flex justify-between text-slate-600">
-                  <span>Courier Delivery:</span>
+                  <span>{isArabicPage ? "مصاريف التوصيل:" : "Courier Delivery:"}</span>
                   <span className="font-mono font-bold">
                     {isFreeShipping ? (
-                      <span className="text-emerald-600 font-black">FREE (Special Offer)</span>
+                      <span className="text-emerald-600 font-black">{isArabicPage ? "مجاني (عرض خاص 🎁)" : "FREE (Special Offer)"}</span>
                     ) : (
                       `${shippingCost} ${currency}`
                     )}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm font-black text-slate-950 pt-1.5 border-t border-slate-200">
-                  <span>Total Payable Upon Delivery:</span>
+                  <span>{isArabicPage ? "المبلغ الإجمالي عند الاستلام:" : "Total Payable Upon Delivery:"}</span>
                   <span className="font-mono text-indigo-700">{totalPrice.toLocaleString()} {currency}</span>
                 </div>
               </div>
@@ -1163,13 +1593,13 @@ export const PublicGrowthLandingPage: React.FC<PublicGrowthLandingPageProps> = (
                   theme.buttonStyle === "pill" ? "rounded-full" : theme.buttonStyle === "rounded" ? "rounded-xl" : "rounded-none"
                 }`}
               >
-                {isSubmitting ? "Registering Your Order..." : "Confirm Cash on Delivery Order"}
+                {isSubmitting ? (isArabicPage ? "جاري تسجيل طلبك..." : "Registering Your Order...") : (isArabicPage ? "اضغط هنا لتأكيد طلبك الآن — الدفع بعد المعاينة" : "Confirm Cash on Delivery Order")}
               </button>
 
               <div className="flex items-center justify-center gap-2 text-[11px] text-slate-500 text-center pt-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                 <span>
-                  Inspect your parcel before handing payment to the courier.
+                  {isArabicPage ? "لك الحق الكامل في فتح الطرد ومعاينته أمام الموزع قبل دفع أي دينار." : "Inspect your parcel before handing payment to the courier."}
                 </span>
               </div>
             </form>

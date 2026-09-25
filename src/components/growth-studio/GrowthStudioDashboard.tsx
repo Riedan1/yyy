@@ -62,7 +62,18 @@ export const GrowthStudioDashboard: React.FC<GrowthStudioDashboardProps> = ({
     const saved = localStorage.getItem("yomi_growth_campaigns");
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed: GrowthCampaign[] = JSON.parse(saved);
+        // Ensure new blueprint campaigns (like camp-tactical-backpack) are merged into persisted state
+        const existingIds = new Set(parsed.map(c => c.id));
+        const missingInitial = INITIAL_GROWTH_CAMPAIGNS.filter(c => !existingIds.has(c.id));
+        if (missingInitial.length > 0) {
+          const merged = [...parsed, ...missingInitial];
+          try {
+            localStorage.setItem("yomi_growth_campaigns", JSON.stringify(merged));
+          } catch {}
+          return merged;
+        }
+        return parsed;
       } catch (e) {
         console.error("Failed to parse saved growth campaigns", e);
       }
@@ -88,6 +99,7 @@ export const GrowthStudioDashboard: React.FC<GrowthStudioDashboardProps> = ({
   const [showCreateCampaignModal, setShowCreateCampaignModal] = useState(false);
   const [showSmartLinkModal, setShowSmartLinkModal] = useState(false);
   const [previewTestPage, setPreviewTestPage] = useState<GrowthLandingPage | null>(null);
+  const [previewTestCampaign, setPreviewTestCampaign] = useState<GrowthCampaign | null>(null);
 
   // Confirmation dialog states
   const [pageToDelete, setPageToDelete] = useState<{ campaignId: string; page: GrowthLandingPage } | null>(null);
@@ -359,10 +371,16 @@ export const GrowthStudioDashboard: React.FC<GrowthStudioDashboardProps> = ({
 
   // Preview template from Blueprint Catalog
   const handlePreviewTemplateFromGallery = (template: GrowthTemplateDefinition) => {
+    let matchedCamp = campaigns.find(c => c.id === "camp-tactical-backpack" && template.id === "tpl-algerian-tactical-backpack");
+    if (!matchedCamp) {
+      matchedCamp = campaigns.find(c => c.id === activeCampaignId) || campaigns[0];
+    }
+    setPreviewTestCampaign(matchedCamp || null);
+
     const dummyPage: GrowthLandingPage = {
       id: `lp-preview-${template.id}`,
-      campaignId: activeCampaignId || "camp-preview",
-      name: `${template.name} Preview`,
+      campaignId: matchedCamp?.id || activeCampaignId || "camp-preview",
+      name: `${template.name} (معاينة حية)`,
       status: "active",
       strategyFocus: template.strategyFocus,
       trafficAllocation: 100,
@@ -471,31 +489,40 @@ export const GrowthStudioDashboard: React.FC<GrowthStudioDashboardProps> = ({
   }, [campaigns, searchQuery, statusFilter]);
 
   // Active customer preview simulation mode
-  if (previewTestPage && activeCampaign) {
-    return (
-      <div className="relative">
-        <div className="sticky top-0 z-50 bg-slate-900 text-white px-4 py-2 flex items-center justify-between text-xs font-bold border-b border-slate-700">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Customer Live Preview: {previewTestPage.name}</span>
-            <span className="text-slate-400 font-mono text-[11px]">({activeCampaign.name})</span>
+  if (previewTestPage) {
+    const campaignToRender = previewTestCampaign || campaigns.find(c => c.id === previewTestPage.campaignId) || activeCampaign || campaigns[0];
+    if (campaignToRender) {
+      return (
+        <div className="relative">
+          <div className="sticky top-0 z-50 bg-slate-900 text-white px-4 py-2.5 flex items-center justify-between text-xs font-bold border-b border-slate-700 shadow-md">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>معاينة حية للمشتري: {previewTestPage.name}</span>
+              <span className="text-slate-400 font-mono text-[11px]">({campaignToRender.name})</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setPreviewTestPage(null);
+                setPreviewTestCampaign(null);
+              }}
+              className="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer text-xs font-bold"
+            >
+              خروج من المعاينة (Exit Preview)
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => setPreviewTestPage(null)}
-            className="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-          >
-            Exit Preview
-          </button>
+          <PublicGrowthLandingPage
+            campaign={campaignToRender}
+            landingPage={previewTestPage}
+            onOrderSuccess={() => {}}
+            onBackToStore={() => {
+              setPreviewTestPage(null);
+              setPreviewTestCampaign(null);
+            }}
+          />
         </div>
-        <PublicGrowthLandingPage
-          campaign={activeCampaign}
-          landingPage={previewTestPage}
-          onOrderSuccess={() => {}}
-          onBackToStore={() => setPreviewTestPage(null)}
-        />
-      </div>
-    );
+      );
+    }
   }
 
   return (
